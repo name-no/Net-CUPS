@@ -1,0 +1,20 @@
+TYPEMAP
+
+ppd_choice_t *			T_PACKED
+ppd_option_t *			T_PACKED
+ppd_group_t *			T_PACKED
+ppd_const_t *			T_PACKED
+ppd_size_t *			T_PACKED
+ppd_emul_t *			T_PACKED
+ppd_profile_t *			T_PACKED
+ppd_file_t *			T_PACKED
+
+ppd_ui_t				T_IV
+ppd_cs_t				T_IV
+ppd_section_t			T_IV
+
+INPUT
+
+
+OUTPUT
+

@@ -1,4 +1,13 @@
 Revision history for Perl extension Net::CUPS.
 
+0.20  Thu Apr 10 02:22:16 2003
+	- Reworked the framework of the Net::CUPS module.
+
+0.11  Mon Apr 07 12:00:00 2003
+	- Added printer configuration option code and documented it.
+	- I don't know why, but for some reason the typemap file was missing from
+	  the CPAN tarball.  Does 'make dist' not include them in the final
+	  package?
+
 0.10  Wed Feb 26 13:18:44 2003
 	- First public release of Net::CUPS.

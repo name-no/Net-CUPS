@@ -1,0 +1,9 @@
+Net::CUPS TODO List
+===================
+
+*) Create a couple of example scripts.
+*) Add the constants to Net::CUPS::Printer.
+*) Optimize the constant function in Net::CUPS::PPD.
+*) Add the new functionality of the latest CUPS release.
+*) Add the raw IPP functionality of the CUPS API to the module.
+*) Add the raw HTTP functionality of the CUPS API to the module.

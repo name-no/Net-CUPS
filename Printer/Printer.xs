@@ -126,7 +126,7 @@ XS_unpack_cups_job_tPTR( SV* rv )
 
 	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
 	{
-		hv = (HV*)SvRV(rv);
+		hv = (HV*)SvRV( rv );
 	}
 
 	if( !hv ) { return NULL; }
@@ -270,13 +270,14 @@ XS_unpack_cups_option_tPTR( SV* rv )
 	return retval;
 }
 	
-MODULE = Net::CUPS		PACKAGE = Net::CUPS		
+MODULE = Net::CUPS::Printer		PACKAGE = Net::CUPS::Printer		
+
+PROTOTYPES: DISABLE
 
 int
 cupsCancelJob( destination, job )
 		const char*	destination;
 		int			job;
-	PROTOTYPE:	$$
 	CODE:
 		RETVAL = cupsCancelJob( destination, job );
 	OUTPUT:
@@ -288,7 +289,6 @@ cupsGetClasses()
 		int		loop = 0;
 		int 	class_count = 0;
 		char**	classes;
-	PROTOTYPE:
 	PPCODE:
 		class_count = cupsGetClasses( &classes );
 
@@ -317,7 +317,6 @@ cupsGetDests()
 		int				destination_count = 0;
 		cups_dest_t*	destinations = NULL;
 		SV*				destination;
-	PROTOTYPE:
 	PPCODE:
 		destination_count = cupsGetDests( &destinations );
 		
@@ -341,7 +340,6 @@ cupsGetDests()
 
 const char*
 cupsGetDefault()
-	PROTOTYPE:
 	CODE:
 		RETVAL = cupsGetDefault();
 	OUTPUT:
@@ -352,7 +350,6 @@ cupsGetJobs( destination, my_jobs, completed )
 		int			my_jobs;
 		int			completed;
 		const char*	destination;
-	PROTOTYPE: $$$
 	INIT:
 		int			loop = 0;
 		int			job_count = 0;
@@ -380,7 +377,6 @@ cupsGetJobs( destination, my_jobs, completed )
 
 int
 cupsGetPrinters()
-	PROTOTYPE:
 	INIT:
 		int  	loop = 0;
 		int  	num_printers = 0;
@@ -412,7 +408,6 @@ cupsGetPrinters()
 
 ipp_status_t
 cupsLastError()
-	PROTOTYPE:
 	INIT:
 		RETVAL = cupsLastError();
 	OUTPUT:
@@ -425,7 +420,6 @@ cupsPrintFile( printer, filename, title, options )
 		const char*		filename;
 		const char*	 	title;
 		SV*				options;
-	PROTOTYPE: $$$$
 	INIT:
 		HV*				option_h;
 		cups_option_t*	option_t = NULL;
@@ -454,7 +448,6 @@ cupsPrintFiles( printer, files, title, options )
 		SV*				files;
 		const char*		title;
 		SV*				options;
-	PROTOTYPE: $$$$
 	INIT:
 		int				loop = 0;
 		HV*				option_h;
@@ -503,7 +496,6 @@ cupsPrintFiles( printer, files, title, options )
 const char*
 cupsErrorString( code )
 		ipp_status_t code;
-	PROTOTYPE: $
 	CODE:
 		RETVAL = ippErrorString( code );
 	OUTPUT:
@@ -511,7 +503,6 @@ cupsErrorString( code )
 
 const char*
 cupsServer()
-	PROTOTYPE: 
 	CODE:
 		RETVAL = cupsServer();
 	OUTPUT:
@@ -520,20 +511,17 @@ cupsServer()
 void
 cupsSetServer( server )
 		const char* server;
-	PROTOTYPE: $
 	CODE:
 		cupsSetServer( server );
 
 void
 cupsSetUser( user )
 		const char* user;
-	PROTOTYPE: $
 	CODE:
 		cupsSetUser( user );
 
 const char*
 cupsUser()
-	PROTOTYPE: 
 	CODE:
 		RETVAL = cupsUser();
 	OUTPUT:

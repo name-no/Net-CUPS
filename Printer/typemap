@@ -1,0 +1,12 @@
+TYPEMAP
+
+cups_job_t *	O_OBJECT
+cups_dest_t *	O_OBJECT
+cups_dest_t **	O_OBJECT
+ipp_jstate_t	T_IV
+ipp_status_t	T_IV
+
+INPUT
+
+OUTPUT
+
