@@ -25,7 +25,7 @@ use Net::CUPS;
 use Pod::Usage;
 use Getopt::Long qw( :config pass_through require_order );
 
-our $VERSION = "0.35";
+our $VERSION = "0.37";
 
 ##==================================================================##
 ##  Main Execution                                                  ##

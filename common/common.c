@@ -388,8 +388,8 @@ void
 XS_pack_ipp_tPtr( SV* s, ipp_t* ipp )
 {
 	SV* sv;
+	SV* transient;
 	HV* hv = newHV();
-	HV* hv_request = newHV();
 	
 	/* Check to see the option is there before we jump off the
 	 * proverbial cliff */
@@ -399,12 +399,32 @@ XS_pack_ipp_tPtr( SV* s, ipp_t* ipp )
 				  newSVuv( ipp->state ), 0 );  
 
 		/* XXX ipp_request_t* request */
+		transient = sv_newmortal();
+		XS_pack_ipp_request_tPtr( transient, &ipp->request );
 		
-
+		hv_store( hv, "request", strlen( "request" ),
+				  transient, 0 );  
 		
 		/* XXX ipp_attribute_t* attrs */
+		transient = sv_newmortal();
+		XS_pack_ipp_attribute_tPtr( transient, ipp->attrs );
+		
+		hv_store( hv, "attrs", strlen( "attrs" ),
+				  transient, 0 );  
+		
 		/* XXX ipp_attribute_t* last */
+		transient = sv_newmortal();
+		XS_pack_ipp_attribute_tPtr( transient, ipp->last );
+		
+		hv_store( hv, "last", strlen( "last" ),
+				  transient, 0 );  
+
 		/* XXX ipp_attribute_t* current */
+		transient = sv_newmortal();
+		XS_pack_ipp_attribute_tPtr( transient, ipp->current );
+		
+		hv_store( hv, "last", strlen( "last" ),
+				  transient, 0 );  
 	}
 
 	sv = newSVrv( s, NULL );
@@ -443,9 +463,254 @@ XS_unpack_ipp_tPtr( SV* rv )
 	return retval;
 }
 
+/* Structure Description (ipp_request_t)                          */
+/* -------------------------------------------------------------- */
+/* ipp_uchar_t version[2];     Protocol version number            */
+/* int status_code;            Status code                        */
+/* int request_id;             Request ID                         */
+void
+XS_pack_ipp_request_tPtr( SV* s, ipp_request_t* request )
+{
+	int loop = 0;
+	SV* sv;
+	SV* version;
+	HV* hv = newHV();
+	AV* av = newAV();
+
+	if( request != NULL )
+	{
+		av_push( av,  newSVuv( request->any.version[0] ) );
+		av_push( av,  newSVuv( request->any.version[1] ) );
+
+		version = newRV( (SV*)av );
+		
+		hv_store( hv, "any.version", strlen( "any.version" ),
+				  version, 0 );  
+
+		hv_store( hv, "any.op_status", strlen( "any.op_status" ),
+				  newSViv( request->any.op_status ), 0 );  
+
+		hv_store( hv, "any.request_id", strlen( "any.request_id" ),
+				  newSViv( request->any.request_id ), 0 );  
+	}
+
+	sv = newSVrv( s, NULL );
+	SvREFCNT_dec( sv );
+	SvRV( s ) = (SV*)hv;
+
+	return;
+}
+
+ipp_request_t*
+XS_unpack_ipp_request_tPtr( SV* rv )
+{
+	ipp_request_t* retval = NULL;
+	HV* hv = NULL;
+	AV* av = NULL;
+	SV* option;
+	SV** ssv;
+	SV** asv;
+	
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV(rv);
+	}
+
+	if( !hv ) { return NULL; }
+	
+	/* Grab some memmory */
+	Newz( 42, retval, 1,  ipp_request_t ); 
+
+	/* ipp_request_t.any.version */
+	ssv = hv_fetch( hv, "any.version", strlen( "any.version" ), 0 );
+
+	if( ssv != NULL )
+	{
+		/* Check to see if we have a reference to an array or not. */
+		if( ( SvROK( *ssv ) && ( SvTYPE( SvRV( *ssv ) ) ) == SVt_PVAV ) )
+		{
+			av = (AV*)SvRV( *ssv );
+		}
+
+		asv = av_fetch( av, 0, 0 );
+	
+		if( asv != NULL && SvUOK( *ssv ) )
+		{
+			retval->any.version[0] = SvUV( *asv );
+		}
+
+		asv = av_fetch( av, 1, 0 );
+	
+		if( asv != NULL && SvUOK( *ssv ) )
+		{
+			retval->any.version[1] = SvUV( *asv );
+		}
+	}
+
+	/* ipp_request_t.any.op_status */
+	ssv = hv_fetch( hv, "any.op_status", strlen( "any.op_status" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->any.op_status = SvIV( *ssv );
+	}
+
+	/* ipp_request_t.any.op_status */
+	ssv = hv_fetch( hv, "any.request_id", strlen( "any.request_id" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->any.request_id = SvIV( *ssv );
+	}
+
+	return retval;
+}
+
+/* Structure Description (ipp_attribute_t)                        */
+/* -------------------------------------------------------------- */
+/* struct ipp_attribute_s *next;      Next attribute in list      */
+/* ipp_tag_t group_tag;               Job/Printer/Operation Tag   */
+/* ipp_tag_t value_tag;               What type of value is it?   */
+/* char *name;                        Name of the attribute       */
+/* int num_values;                    Number of values            */
+/* ipp_value_t values[1];             Values                      */
+void
+XS_pack_ipp_attribute_tPtr( SV* s, ipp_attribute_t* attribute )
+{
+	int loop = 0;
+	SV* sv;
+	SV* version;
+	HV* hv = newHV();
+	AV* av = newAV();
+
+	if( attribute != NULL )
+	{
+		hv_store( hv, "group_tag", strlen( "group_tag" ),
+				  newSViv( attribute->group_tag ), 0 );  
+
+		hv_store( hv, "value_tag", strlen( "value_tag" ),
+				  newSViv( attribute->value_tag ), 0 );  
+
+		hv_store( hv, "name", strlen( "name" ),
+				  newSVpv( attribute->name, strlen( attribute->name ) ), 0 );
+
+		hv_store( hv, "num_values", strlen( "num_values" ),
+				  newSViv( attribute->num_values ), 0 );
+	}
+
+	sv = newSVrv( s, NULL );
+	SvREFCNT_dec( sv );
+	SvRV( s ) = (SV*)hv;
+
+	return;
+}
+
+ipp_attribute_t*
+XS_unpack_ipp_attribute_tPtr( SV* rv )
+{
+	ipp_attribute_t* retval = NULL;
+	HV* hv = NULL;
+	AV* av = NULL;
+	SV* option;
+	SV** ssv;
+	SV** asv;
+	
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV(rv);
+	}
+
+	if( !hv ) { return NULL; }
+	
+	/* Grab some memmory */
+	Newz( 42, retval, 1,  ipp_attribute_t ); 
+
+	/* ipp_attribute_t.group_tag */
+	ssv = hv_fetch( hv, "group_tag", strlen( "group_tag" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->group_tag = SvIV( *ssv );
+	}
+
+	/* ipp_attribute_t.value_tag */
+	ssv = hv_fetch( hv, "value_tag", strlen( "value_tag" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->value_tag = SvIV( *ssv );
+	}
+
+	/* ipp_attribute_t.name */
+	ssv = hv_fetch( hv, "name", strlen( "name" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->name = SvPV_nolen( *ssv );
+	}
+	
+	/* ipp_attribute_t.num_values */
+	ssv = hv_fetch( hv, "num_values", strlen( "num_values" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->num_values = SvIV( *ssv );
+	}
+
+	return retval;
+}
+
+void
+XS_pack_ipp_value_tPtr( SV* s, ipp_value_t* value )
+{
+	int loop = 0;
+	SV* sv;
+	SV* version;
+	HV* hv = newHV();
+	AV* av = newAV();
+
+	if( value != NULL )
+	{
 
 
 
+
+
+
+
+
+	}
+
+	sv = newSVrv( s, NULL );
+	SvREFCNT_dec( sv );
+	SvRV( s ) = (SV*)hv;
+
+	return;
+}
+
+ipp_value_t*
+XS_unpack_ipp_value_tPtr( SV* rv )
+{
+	ipp_value_t* retval = NULL;
+	HV* hv = NULL;
+	AV* av = NULL;
+	SV* option;
+	SV** ssv;
+	SV** asv;
+	
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV(rv);
+	}
+
+	if( !hv ) { return NULL; }
+	
+	/* Grab some memmory */
+	Newz( 42, retval, 1,  ipp_value_t ); 
+
+
+	return retval;
+}
 
 
 

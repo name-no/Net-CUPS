@@ -1,7 +1,7 @@
-package Net::CUPS::IPP;
+package Net::CUPS::Network;
 ######################################################################
 ##                                                                  ##
-##  Package:  IPP.pm                                                ##
+##  Package:  Network.pm                                            ##
 ##  Author:   D. Hageman <dhageman@dracken.com>                     ##
 ##                                                                  ##
 ##  Description:                                                    ##
@@ -21,13 +21,24 @@ require XSLoader;
 use strict;
 use warnings;
 
-our $VERSION = "0.35";
+our $VERSION = "0.37";
 
 our @ISA = qw( Exporter );
 
-XSLoader::load( 'Net::CUPS::IPP', $VERSION );
+XSLoader::load( 'Net::CUPS::Network', $VERSION );
 
 our @EXPORT = qw(
+					CUPS_ACCEPT_JOBS 
+					CUPS_ADD_CLASS 
+					CUPS_ADD_DEVICE
+					CUPS_ADD_PRINTER 
+					CUPS_DELETE_CLASS 
+					CUPS_DELETE_DEVICE
+					CUPS_DELETE_PRINTER 
+					CUPS_GET_CLASSES 
+					CUPS_GET_DEFAULT
+					CUPS_REJECT_JOBS 
+					CUPS_SET_DEFAULT
 					IPP_MAX_NAME
 					IPP_MAX_VALUES
 					IPP_PORT
@@ -165,22 +176,6 @@ our @EXPORT = qw(
 					IPP_PROMOTE_JOB
 					IPP_SCHEDULE_JOB_AFTER
 					IPP_PRIVATE
-					CUPS_GET_DEFAULT
-					CUPS_GET_PRINTERS
-					CUPS_ADD_PRINTER
-					CUPS_DELETE_PRINTER
-					CUPS_GET_CLASSES
-					CUPS_ADD_CLASS
-					CUPS_DELETE_CLASS
-					CUPS_ACCEPT_JOBS
-					CUPS_REJECT_JOBS
-					CUPS_SET_DEFAULT
-					CUPS_GET_DEVICES
-					CUPS_GET_PPDS
-					CUPS_MOVE_JOB
-					CUPS_ADD_DEVICE
-					CUPS_DELETE_DEVICE
-
 					IPP_OK
 					IPP_OK_SUBST
 					IPP_OK_CONFLICT
@@ -193,9 +188,106 @@ our @EXPORT = qw(
 					IPP_NOT_AUTHENTICATED
 					IPP_NOT_AUTHORIZED
 					IPP_NOT_POSSIBLE
-
 					IPP_VERSION
-			);
+					ippNew
+					ippErrorString
+					HTTP_0_9 
+					HTTP_1_0 
+					HTTP_1_1
+					HTTP_ACCEPTED 
+					HTTP_AUTH_BASIC 
+					HTTP_AUTH_MD5 
+					HTTP_AUTH_MD5_INT
+					HTTP_AUTH_MD5_SESS 
+					HTTP_AUTH_MD5_SESS_INT 
+					HTTP_AUTH_NONE
+					HTTP_BAD_GATEWAY 
+					HTTP_BAD_REQUEST 
+					HTTP_CLOSE 
+					HTTP_CONFLICT
+					HTTP_CONTINUE 
+					HTTP_CREATED 
+					HTTP_DELETE 
+					HTTP_ENCODE_CHUNKED
+					HTTP_ENCODE_LENGTH 
+					HTTP_ENCRYPT_ALWAYS 
+					HTTP_ENCRYPT_IF_REQUESTED
+					HTTP_ENCRYPT_NEVER 
+					HTTP_ENCRYPT_REQUIRED 
+					HTTP_ERROR
+					HTTP_FIELD_ACCEPT_LANGUAGE 
+					HTTP_FIELD_ACCEPT_RANGES
+					HTTP_FIELD_AUTHORIZATION 
+					HTTP_FIELD_CONNECTION
+					HTTP_FIELD_CONTENT_ENCODING 
+					HTTP_FIELD_CONTENT_LANGUAGE
+					HTTP_FIELD_DATE 
+					HTTP_FIELD_HOST 
+					HTTP_FIELD_IF_MODIFIED_SINCE
+					HTTP_FIELD_IF_UNMODIFIED_SINCE 
+					HTTP_FIELD_KEEP_ALIVE
+					HTTP_FIELD_LAST_MODIFIED 
+					HTTP_FIELD_LINK 
+					HTTP_FIELD_LOCATION
+					HTTP_FIELD_MAX 
+					HTTP_FIELD_RANGE 
+					HTTP_FIELD_REFERER
+					HTTP_FIELD_RETRY_AFTER 
+					HTTP_FIELD_TRANSFER_ENCODING
+					HTTP_FIELD_UNKNOWN 
+					HTTP_FIELD_UPGRADE 
+					HTTP_FIELD_USER_AGENT
+					HTTP_FIELD_WWW_AUTHENTICATE 
+					HTTP_FORBIDDEN 
+					HTTP_GATEWAY_TIMEOUT
+					HTTP_GET 
+					HTTP_GET_SEND 
+					HTTP_GONE 
+					HTTP_HEAD 
+					HTTP_KEEPALIVE_OFF
+					HTTP_KEEPALIVE_ON 
+					HTTP_LENGTH_REQUIRED 
+					HTTP_MAX_BUFFER
+					HTTP_MAX_HOST 
+					HTTP_MAX_URI 
+					HTTP_MAX_VALUE
+					HTTP_METHOD_NOT_ALLOWED 
+					HTTP_MOVED_PERMANENTLY
+					HTTP_MOVED_TEMPORARILY 
+					HTTP_MULTIPLE_CHOICES 
+					HTTP_NOT_ACCEPTABLE
+					HTTP_NOT_AUTHORITATIVE 
+					HTTP_NOT_FOUND 
+					HTTP_NOT_IMPLEMENTED
+					HTTP_NOT_MODIFIED 
+					HTTP_NOT_SUPPORTED 
+					HTTP_NO_CONTENT 
+					HTTP_OK
+					HTTP_OPTIONS 
+					HTTP_PROXY_AUTHENTICATION 
+					HTTP_PARTIAL_CONTENT
+					HTTP_PAYMENT_REQUESTED 
+					HTTP_POST 
+					HTTP_POST_RECV 
+					HTTP_POST_SEND
+					HTTP_PRECONDITION 
+					HTTP_PUT 
+					HTTP_PUT_RECV 
+					HTTP_REQUEST_TIMEOUT
+					HTTP_REQUEST_TOO_LARGE 
+					HTTP_RESET_CONTENT 
+					HTTP_SEE_OTHER
+					HTTP_SERVER_ERROR 
+					HTTP_SERVICE_UNAVAILABLE 
+					HTTP_STATUS
+					HTTP_SWITCHING_PROTOCOLS 
+					HTTP_TRACE 
+					HTTP_UNAUTHORIZE
+					HTTP_UNSUPPORTED_MEDIATYPE
+					HTTP_UPGRADE_REQUIRED 
+					HTTP_URI_TOO_LONG 
+					HTTP_USE_PROXY
+					HTTP_WAITING );
 
 ##==================================================================##
 ##  Function(s)                                                     ##
@@ -251,11 +343,11 @@ __END__
 
 =head1 NAME
 
-Net::CUPS::IPP - CUPS C API Interface.
+Net::CUPS::Network - CUPS C API Interface.
 
 =head1 SYNOPSIS
 
- use Net::CUPS::IPP;
+ use Net::CUPS::Network;
 
 =head1 ABSTRACT
 
@@ -273,7 +365,7 @@ function description goes here.
 
 =head1 DESCRIPTION
 
-Net::CUPS::IPP is an interface to the Common Unix Printing System API.
+Net::CUPS::Network is an interface to the Common Unix Printing System API.
 
 =head1 AUTHOR
 

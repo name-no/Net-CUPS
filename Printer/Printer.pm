@@ -21,7 +21,7 @@ require XSLoader;
 use strict;
 use warnings;
 
-our $VERSION = "0.35";
+our $VERSION = "0.37";
 
 our @ISA = qw( Exporter );
 

@@ -20,12 +20,12 @@ require Exporter::Cluster;
 use strict;
 use warnings;
 
-our $VERSION = "0.35";
+our $VERSION = "0.37";
 
 our @ISA = qw( Exporter::Cluster );
 
 our %EXPORT_CLUSTER = (
-	'Net::CUPS::IPP'		=>	[],
+	'Net::CUPS::Network'	=>	[],
 	'Net::CUPS::PPD'		=>	[],
 	'Net::CUPS::Printer'	=>	[],
 );

@@ -8,11 +8,11 @@ $config{INC} = `cups-config --cflags`;
 $config{LIBS} = `cups-config --libs`;
 
 WriteMakefile(
-    'NAME'		=> 'Net::CUPS::IPP',
-    'VERSION_FROM'	=> 'IPP.pm', # finds $VERSION
+    'NAME'		=> 'Net::CUPS::Network',
+    'VERSION_FROM'	=> 'Network.pm', # finds $VERSION
     'PREREQ_PM'		=> {'Test::More'  =>  0}, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM => 'IPP.pm', # retrieve abstract from module
+      (ABSTRACT_FROM => 'Network.pm', # retrieve abstract from module
        AUTHOR     => 'D. Hageman <dhageman@dracken.com>') : ()),
     'DEFINE'		=> '', # e.g., '-DHAVE_SOMETHING'
 	%config

@@ -16,7 +16,7 @@ PROTOTYPES: DISABLE
 INCLUDE: PPD_constant_xs.inc
 
 int
-ppdConflicts( ppd );
+ppdConflicts( ppd )
 		ppd_file_t* ppd;
 	CODE:
 		RETVAL = ppdConflicts( ppd );

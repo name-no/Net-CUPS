@@ -17,10 +17,11 @@ ppd_file_t *			T_PACKED
 ppd_ui_t				T_IV
 ppd_cs_t				T_IV
 ppd_section_t			T_IV
-ipp_uchar_t				T_UV
+ipp_uchar_t *			T_U_CHAR
 ipp_op_t				T_UV
 ipp_status_t			T_UV
-
+ipp_tag_t				T_IV
+ipp_t *					T_PACKED
 INPUT
 
 

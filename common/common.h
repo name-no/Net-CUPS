@@ -22,7 +22,14 @@ cups_job_t* XS_unpack_cups_job_tPtr( SV* rv );
 /* Structures found in ipp.h */
 void XS_pack_ipp_tPtr( SV* s, ipp_t* ipp );
 ipp_t* XS_unpack_ipp_tPtr( SV* rv );
+void XS_pack_ipp_request_tPtr( SV* s, ipp_request_t* request );
+ipp_request_t* XS_unpack_ipp_request_tPtr( SV* rv );
+void XS_pack_ipp_attribute_tPtr( SV* s, ipp_attribute_t* attribute );
+ipp_attribute_t* XS_unpack_ipp_attribute_tPtr( SV* rv );
+void XS_pack_ipp_value_tPtr( SV* s, ipp_value_t* value );
+ipp_value_t* XS_unpack_ipp_value_tPtr( SV* rv );
 
+/* Structures found in ppd.h */
 void XS_pack_ppd_attr_tPtr( SV* s, ppd_attr_t* attr );
 void XS_pack_ppd_choice_tPtr( SV* s, ppd_choice_t* choice );
 void XS_pack_ppd_const_tPtr( SV* s, ppd_const_t* constraint );

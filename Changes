@@ -1,5 +1,11 @@
 Revision history for Perl extension Net::CUPS.
 
+0.37 Mon Nov  8 23:49:36 2004
+	- Net::CUPS::IPP module has been moved to Net::CUPS::Network as the
+	  initial plan to have seperate IPP and HTTP modules proved to be
+	  an unwise design decision.
+	- Added all HTTP constants to Net::CUPS::Network
+
 0.35  Tue Oct 12 23:37:27 2004
 	- Upgraded to handle the latest release of CUPS - 1.2.21
 	- Added the SUPPORT disclaimer to the POD located in CUPS.pm.
