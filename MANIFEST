@@ -22,5 +22,12 @@ Printer/Printer.xs
 Printer/Printer.pm
 Printer/Makefile.PL
 Printer/t/01_use.t
+Printer/t/02_dest.t
+Printer/t/03_option.t
+Printer/Printer_constant_c.inc
 Printer/typemap
+Printer/Printer_constant_xs.inc
 TODO
+common/common.c
+common/ppport.h
+common/common.h

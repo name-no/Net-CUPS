@@ -2,7 +2,7 @@ package Net::CUPS::Printer;
 ######################################################################
 ##                                                                  ##
 ##  Package:  CUPS.pm                                               ##
-##  Author:   D. Hageman <dhageman@eecs.ku.edu>                     ##
+##  Author:   D. Hageman <dhageman@dracken.com>                     ##
 ##                                                                  ##
 ##  Description:                                                    ##
 ##                                                                  ##
@@ -21,24 +21,56 @@ require XSLoader;
 use strict;
 use warnings;
 
-our $VERSION = "0.20";
+our $VERSION = "0.25";
 
 our @ISA = qw( Exporter );
 
 XSLoader::load( 'Net::CUPS::Printer', $VERSION );
 
 our @EXPORT = qw( 
+					CUPS_PRINTER_LOCAL
+					CUPS_PRINTER_CLASS
+					CUPS_PRINTER_REMOTE
+					CUPS_PRINTER_BW
+					CUPS_PRINTER_COLOR
+					CUPS_PRINTER_DUPLEX
+					CUPS_PRINTER_STAPLE
+					CUPS_PRINTER_COPIES
+					CUPS_PRINTER_COLLATE
+					CUPS_PRINTER_PUNCH
+					CUPS_PRINTER_COVER
+					CUPS_PRINTER_BIND
+					CUPS_PRINTER_SORT
+					CUPS_PRINTER_SMALL
+					CUPS_PRINTER_MEDIUM
+					CUPS_PRINTER_LARGE
+					CUPS_PRINTER_VARIABLE
+					CUPS_PRINTER_IMPLICIT
+					CUPS_PRINTER_DEFAULT
+					CUPS_PRINTER_FAX
+					CUPS_PRINTER_OPTIONS
+					CUPS_VERSION
+					CUPS_VERSION_MAJOR
+					CUPS_VERSION_MINOR
+					CUPS_VERSION_PATCH
+					CUPS_DATE_ANY
+					cupsAddDest
+					cupsAddOption
 					cupsCancelJob
 					cupsErrorString
 					cupsGetClasses
 					cupsGetDefault
+					cupsGetDest
 					cupsGetDests
+					cupsGetOption
+					cupsGetPPD
 					cupsGetPrinters 
 					cupsGetJobs
 					cupsLastError
 					cupsPrintFile
 					cupsPrintFiles
 					cupsServer
+					cupsSetDests
 					cupsUser
 );
 
@@ -48,19 +80,41 @@ our @EXPORT = qw(
 ##==================================================================##
 
 ##----------------------------------------------##
-##  cupsAddOption                               ##
+##  AUTOLOAD                                    ##
 ##----------------------------------------------##
-##  Function to add an option to a option hash. ##
+##  Catch all method and constant handling      ##
+##  routine.                                    ##
 ##----------------------------------------------##
-sub cupsAddOption
+sub AUTOLOAD
 {
-	my( $options, $name, $value ) = @_;
+	my $constant;
+	our $AUTOLOAD;
 
-	
-	return;
+	( $constant = $AUTOLOAD ) =~ s/.*:://;
+
+	if( $constant eq 'constant' )
+	{
+		croak( "&NET::CUPS::Printer::constant not defined" );
+	}
+
+	## Attempt to resolve the constant ...
+	my( $error, $value ) = constant( $constant );
+
+	## Check for an error and die if one exists.
+	if( $error )
+	{
+		croak( $error );
+	}
+
+	## We are good to go ... so return the constant.
+	{
+		no strict 'refs';
+
+		*$AUTOLOAD = sub{ $value };
+	}
+
+	goto &$AUTOLOAD;
 }
-
-
 
 ##==================================================================##
 ##  End of Code                                                     ##

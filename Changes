@@ -1,5 +1,17 @@
 Revision history for Perl extension Net::CUPS.
 
+0.25  Sat May 31 19:45:45 2003
+	- Added constants to Net::CUPS::Printer.
+	- Updated constants in Net::CUPS::PPD.
+	- Added cupsAddDest, cupsGetPPD, cupsGetDest, cupsSetDests
+	  to Net::CUPS::Printer.
+	- Added more tests to Net::CUPS::Printer.
+	- Added more tests to Net::CUPS::PPD.
+	- Seperated the C routines for CUPS data type converstion for sharing
+	  between the individual perl modules.
+	- Added conversion routines for ppd_attr_t.
+	- Added more error handling to each module.
+
 0.20  Thu Apr 10 02:22:16 2003
 	- Reworked the framework of the Net::CUPS module.
 

@@ -2,8 +2,9 @@ Net::CUPS TODO List
 ===================
 
 *) Create a couple of example scripts.
-*) Add the constants to Net::CUPS::Printer.
+*) Re-write the cups_option_t conversion fuctions.
 *) Optimize the constant function in Net::CUPS::PPD.
+*) Optimize the constant function in Net::CUPS::Printer.
 *) Add the new functionality of the latest CUPS release.
 *) Add the raw IPP functionality of the CUPS API to the module.
 *) Add the raw HTTP functionality of the CUPS API to the module.

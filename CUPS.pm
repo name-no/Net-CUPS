@@ -2,7 +2,7 @@ package Net::CUPS;
 ######################################################################
 ##                                                                  ##
 ##  Package:  CUPS.pm                                               ##
-##  Author:   D. Hageman <dhageman@eecs.ku.edu>                     ##
+##  Author:   D. Hageman <dhageman@dracken.com>                     ##
 ##                                                                  ##
 ##  Description:                                                    ##
 ##                                                                  ##
@@ -20,11 +20,12 @@ require Exporter::Cluster;
 use strict;
 use warnings;
 
-our $VERSION = "0.20";
+our $VERSION = "0.25";
 
 our @ISA = qw( Exporter::Cluster );
 
 our %EXPORT_CLUSTER = (
+	'Net::CUPS::IPP'		=>	[],
 	'Net::CUPS::PPD'		=>	[],
 	'Net::CUPS::Printer'	=>	[],
 );

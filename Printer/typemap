@@ -1,8 +1,9 @@
 TYPEMAP
 
-cups_job_t *	O_OBJECT
-cups_dest_t *	O_OBJECT
-cups_dest_t **	O_OBJECT
+cups_job_t *	T_PACKED
+cups_dest_t *	T_PACKED
+cups_dest_t **	T_PACKED
+ppd_file_t *	T_PACKED
 ipp_jstate_t	T_IV
 ipp_status_t	T_IV
 

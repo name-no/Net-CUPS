@@ -5,14 +5,21 @@
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More tests => 2;
-BEGIN { use_ok('Net::CUPS::PPD') };
+use Test::More tests => 3;
+BEGIN { use_ok('Net::CUPS::Printer') };
 
 #########################
 
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $file = ppdOpenFile( "sample/test.ppd" );
+my @options = ();
 
-ok( $file, "ppdOpenFile" );
+@options = cupsAddOption( "media", "letter", \@options );
+@options = cupsAddOption( "resolution", "300dpi", \@options );
+
+ok( scalar( @options ) == 2, "cupsAddOption( name, value, options )" );
+
+my $value = cupsGetOption( "media", \@options );
+
+ok( $value eq "letter", "cupsGetOption( name, options )" );

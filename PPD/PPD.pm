@@ -2,7 +2,7 @@ package Net::CUPS::PPD;
 ######################################################################
 ##                                                                  ##
 ##  Package:  CUPS.pm                                               ##
-##  Author:   D. Hageman <dhageman@eecs.ku.edu>                     ##
+##  Author:   D. Hageman <dhageman@dracken.com>                     ##
 ##                                                                  ##
 ##  Description:                                                    ##
 ##                                                                  ##
@@ -22,7 +22,7 @@ use Carp;
 use strict;
 use warnings;
 
-our $VERSION = "0.20";
+our $VERSION = "0.25";
 
 our @ISA = qw( Exporter );
 
@@ -48,6 +48,23 @@ our @EXPORT = qw(
 					PPD_CS_RGB
 					PPD_CS_RGBK
 					PPD_CS_N
+					PPD_OK
+					PPD_FILE_OPEN_ERROR
+					PPD_NULL_FILE
+					PPD_ALLOC_ERROR
+					PPD_MISSING_PPDADOBE4
+					PPD_MISSING_VALUE
+					PPD_INTERNAL_ERROR
+					PPD_BAD_OPEN_GROUP
+					PPD_NESTED_OPEN_GROUP
+					PPD_BAD_ORDER_DEPENDENCY
+					PPD_BAD_UI_CONSTRAINTS
+					PPD_MISSING_ASTERISK
+					PPD_LINE_TOO_LONG
+					PPD_ILLEGAL_CHARACTER
+					PPD_ILLEGAL_MAIN_KEYWORD
+					PPD_ILLEGAL_OPTION_KEYWORD
+					PPD_ILLEGAL_TRANSLATION
 					ppdConflicts
 					ppdEmit
 					ppdEmitFd
