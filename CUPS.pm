@@ -20,7 +20,7 @@ require Exporter::Cluster;
 use strict;
 use warnings;
 
-our $VERSION = "0.25";
+our $VERSION = "0.35";
 
 our @ISA = qw( Exporter::Cluster );
 
@@ -53,27 +53,30 @@ __END__
 
 Net::CUPS - CUPS C API Interface.
 
-=head1 SYNOPSIS
-
- use Net::CUPS;
-
 =head1 ABSTRACT
 
- This is the abstract for this file.
-
-=head1 FUNCTIONS
-
-=over 4
-
-=item None.
-
- None.
-
-=back
+ use Net::CUPS;
 
 =head1 DESCRIPTION
 
 Net::CUPS is an interface to the Common Unix Printing System API.
+
+=head1 FUNCTIONS
+
+This module does not contain any functions.  All of the
+functions are contained within the modules listed
+in the SEE ALSO below.
+
+=head1 SUPPORT
+
+This module is offered without any support.  If you have any questions
+on how to use this module then you should start by reading the 
+"CUPS Software Programmers Manual".  This module is for the most
+part a Perl implementation of C API.  If you can use the C API
+then you can use this module.  If you find a bug or get stuck feel
+free to e-mail, but don't expect an immediate response.  I apologize
+for taking this attitude, but several people have e-mailed me in the
+past and were quite abbrasive with their correspondence.
 
 =head1 AUTHOR
 
@@ -85,7 +88,7 @@ L<Net::CUPS::Printer>, L<Net::CUPS::PPD>, L<Net::CUPS::IPP>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003.
+Copyright (c) 2003-2004.
 D. Hageman (Dracken Technologies)
 All rights reserved.
 

@@ -194,7 +194,11 @@ cupsGetDests()
 		}
 		else
 		{
-			XSRETURN_UNDEF;
+			/* I was sorta confused about what would be proper to return */
+			/* here.  If I returned XS_RETURNUNDEF it would cause issues */
+			/* with using scalar( @return_array ).  My solution is to    */
+			/* just return '0' */
+			XSRETURN( 0 );
 		}
 
 const char*

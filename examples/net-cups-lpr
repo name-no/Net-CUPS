@@ -1,0 +1,170 @@
+#!/usr/bin/perl
+######################################################################
+##                                                                  ##
+##  Script: net-cups-lpr                                            ##
+##  Author: D. Hageman <dhageman@dracken.com>                       ##
+##                                                                  ##
+##  Description:                                                    ##
+##                                                                  ##
+##  Command line utility to demonstrate the usage of Net::CUPS.     ##
+##  This is not intended to be a lpr(1) replacement!                ##
+##                                                                  ##
+######################################################################
+
+##==================================================================##
+##  Libraries and Variables                                         ##
+##==================================================================##
+
+require 5.006;
+
+use strict;
+use warnings;
+
+use Net::CUPS;
+
+use Pod::Usage;
+use Getopt::Long qw( :config pass_through require_order );
+
+our $VERSION = "0.35";
+
+##==================================================================##
+##  Main Execution                                                  ##
+##==================================================================##
+
+{
+	## Create a variable to hold our configuration values.
+	my $config = {};
+	
+	## Make the configuration hash happy.
+	initialize_configuration( $config );
+
+	## Setup our command line arguments.
+	GetOptions( 'help|?'	=> \$config->{getopt}->{help},
+   				'man'		=> \$config->{getopt}->{man},
+				'c|C'		=> \$config->{getopt}->{copies},
+				'P|p=s'		=> \$config->{getopt}->{destination}	) 
+		or pod2usage( 2 );
+
+	## Which options did we specify?
+	if( $config->{getopt}->{help} )
+	{
+		pod2usage( 1 );
+	}
+	
+	if( $config->{getopt}->{man} )
+	{
+		pod2usage( -exitstatus => 0,
+				   -verbose    => 2 );
+	}
+
+	if( $config->{getopt}->{destination} eq "" )
+	{
+		$config->{getopt}->{destination} = cupsGetDefault();
+	
+		## If we do not have a default printer this will return an empty
+		## string. Actually, in truth it is more like no printers have
+		## been setup on the system.
+		if( !defined( $config->{getopt}->{destination} ) )
+		{
+			print "$0 Error: You do not have a default printer defined!\n";
+			exit( 3 );
+		}
+	}
+	else
+	{
+		## XXX Add error checking to make sure the destination really exists.
+	}
+
+	## Grab the file off the command line ...
+	$config->{filename} = shift( @ARGV ) || "";
+
+	## Do some error checking to make sure a filename was provided.
+	if( $config->{filename} eq "" )
+	{
+		print "$0 Error: No filename was provided for printing!\n";
+		exit( 3 );
+	}
+
+	## Loop for each copy we want printed. This isn't the most effective
+	## way of doing this as it creates a new job for each copy instead
+	## of printing it in one job, but that is a lesson for another day.
+	for( my $loop = 0; $loop < $config->{getopt}->{copies}; $loop++ )
+	{
+		## This is really all that needs to be done to print.  
+		## Not really rocket science eh?
+		## I hate to say it - but to all of those people who wanted me
+		## to give them free support so they could use Net::CUPS in
+		## a commercial project and they got mad because I explained
+		## that all they really needed to do to understand the module 
+		## was read the CUPS Software Programmers Manual - 
+		## @#$%@#$#@@# You.  Get it now?
+		cupsPrintFile( $config->{getopt}->{destination},
+					   $config->{filename},
+			  		   "net-cups-lpr demonstration",
+			  		   {} );
+	}
+	
+	## We are done ... let us get out of here.
+	exit( 0 );
+}
+
+##==================================================================##
+##  Function(s)                                                     ##
+##==================================================================##
+
+##----------------------------------------------##
+## initialize_configuration                     ##
+##----------------------------------------------##
+## Initializes the configuration variables.     ##
+##----------------------------------------------##
+sub initialize_configuration
+{
+	my $config = shift;
+
+	## Command line option defaults.
+	$config->{getopt}->{help} = 0;
+	$config->{getopt}->{man} = 0;
+	$config->{getopt}->{copies} = 1;
+	$config->{getopt}->{destination} = "";
+	
+	return;
+}
+
+##==================================================================##
+##  End of Code                                                     ##
+##==================================================================##
+1;
+
+##==================================================================##
+##  Plain Old Documenation (POD)                                    ##
+##==================================================================##
+
+__END__
+
+=head1 NAME
+
+net-cups-lpr
+
+=head1 SYNOPSIS
+
+net-cups-lpr [ -P destination ] [-# num-copies ] [ file(s) ]
+
+=head1 DESCRIPTION
+
+Example script to demonstrate the usage of Net::CUPS.  This is not
+intended to be a replacement for lpr(1)!
+
+=head1 AUTHOR
+
+D. Hageman E<lt>dhageman@dracken.comE<gt>
+
+=head1 SEE ALSO
+
+L<Net::CUPS>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003-2004 D. Hageman (Dracken Technologies).  
+All rights reserved.
+
+=cut

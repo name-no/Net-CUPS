@@ -9,15 +9,6 @@ into Perl hashes for easy modification from a Perl application.
 
 The Common Unix Printing System can be found at http://www.cups.org.
 
-**WARNING** **WARNING** **WARNING** **WARNING** **WARNING** **WARNING**
-
-This is just an initial release that needs much more polishing.  The
-API may change in the near future based on any feedback I receive.
-Please give me feedback concerning this module!
-
-**WARNING** **WARNING** **WARNING** **WARNING** **WARNING** **WARNING**
-
-
 INSTALLATION
 
 To install this module type the following:
@@ -27,16 +18,25 @@ To install this module type the following:
    make test
    make install
 
+Please note that if you want to install only one of the modules that
+you will have to copy the file 'typemap' to the individual directories
+containing the modules you want to install or it will not compile 
+correctly.  This practice is not recommended.
+
 DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-	*) Exporter::Cluster
-	*) Common Unix Printing System (CUPS) - http://www.cups.org
+   *) Exporter::Cluster
+   *) Common Unix Printing System (CUPS) - http://www.cups.org
+
+The Makefile.PL will test for the version of the CUPS you have installed
+and die if an appropriate version is not found.  This is due to the way
+the module had to be coded to handle various variables and functions.
 
 COPYRIGHT AND LICENSE
 
-Copyright (C) 2003 D. Hageman <dhageman@dracken.com>
+Copyright (C) 2003-2004 D. Hageman <dhageman@dracken.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

@@ -1,5 +1,21 @@
 Revision history for Perl extension Net::CUPS.
 
+0.35  Tue Oct 12 23:37:27 2004
+	- Upgraded to handle the latest release of CUPS - 1.2.21
+	- Added the SUPPORT disclaimer to the POD located in CUPS.pm.
+	- Moved all typemaps into a global typemap.
+	- Moved all pack/unpack functions into a globally accessible
+	  area.
+	- Fixed issue with running certain functions in Net::CUPS::Printer
+	  without having any printers setup in the CUPS config.
+	- Added constants to the Net::CUPS::IPP module.
+	- Added more debugging and polishing to net-cups-lpr
+
+0.30  Tue Dec  9 23:26:17 2003 (Not Distributed)
+	- Added an simple example script demonstrating the usage of Net::CUPS.
+	- Added a Net::CUPS::IPP stub.
+	- Tweaked documentation.
+
 0.25  Sat May 31 19:45:45 2003
 	- Added constants to Net::CUPS::Printer.
 	- Updated constants in Net::CUPS::PPD.
@@ -11,6 +27,7 @@ Revision history for Perl extension Net::CUPS.
 	  between the individual perl modules.
 	- Added conversion routines for ppd_attr_t.
 	- Added more error handling to each module.
+	- Started Net::CUPS::IPP module.
 
 0.20  Thu Apr 10 02:22:16 2003
 	- Reworked the framework of the Net::CUPS module.

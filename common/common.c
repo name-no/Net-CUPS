@@ -3,7 +3,7 @@
  *
  *  Author: D. Hageman <dhageman@dracken.com>
  *
- *  Copyright 2003 by Dracken Technologies.
+ *  Copyright 2003-2004 Dracken Technologies.
  *
  *  CUPS, the Common UNIX Printing System, the CUPS logo, and ESP Print Pro 
  *  are the trademark property of Easy Software Products.
@@ -21,12 +21,18 @@
 
 #include "common.h"
 
+/* Structure Description (cups_option_t)                          */
+/* -------------------------------------------------------------- */
+/* char *name;                 Name of option                     */
+/* char *value;                Value of option                    */
 void
 XS_pack_cups_option_tPtr( SV* s, cups_option_t* option )
 {
 	SV* sv;
 	HV* hv = newHV();
 	
+	/* Check to see the option is there before we jump off the
+	 * proverbial cliff */
 	if( option != NULL )
 	{
 		hv_store( hv, "name", strlen( "name" ),
@@ -43,6 +49,50 @@ XS_pack_cups_option_tPtr( SV* s, cups_option_t* option )
 	return;
 }
 
+cups_option_t*
+XS_unpack_cups_option_tPtr( SV* rv )
+{
+	cups_option_t* retval = NULL;
+	HV* hv = NULL;
+	SV* option;
+	SV** ssv;
+	
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV(rv);
+	}
+
+	if( !hv ) { return NULL; }
+	
+	/* Grab some memmory */
+	Newz( 42, retval, 1,  cups_option_t ); 
+	
+	/* cups_option_t.name */
+	ssv = hv_fetch( hv, "name", strlen( "name" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->name = SvPV_nolen( *ssv );
+	}
+	
+	/* cups_option_t.value */
+	ssv = hv_fetch( hv, "value", strlen( "value" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->value = SvPV_nolen( *ssv );
+	}
+
+	return retval;
+}
+
+/* Structure Description (cups_dest_t)                            */
+/* -------------------------------------------------------------- */
+/* char *name;                 Printer or class name              */
+/* char *instance;             Local instance name or NULL        */
+/* int is_default;             Is this printer the default?       */
+/* int num_options;            Number of options                  */
+/* cups_option_t *options;     Options                            */
 void 
 XS_pack_cups_dest_tPtr( SV* s, cups_dest_t* dest )
 {
@@ -93,6 +143,92 @@ XS_pack_cups_dest_tPtr( SV* s, cups_dest_t* dest )
 	return;
 }
 
+cups_dest_t*
+XS_unpack_cups_dest_tPtr( SV* rv )
+{
+	cups_dest_t* retval = NULL;
+	HV* hv = NULL;
+	AV* av = NULL;
+	SV** ssv = NULL;
+	int loop = 0;
+	
+	/* Check to see if we have a reference to a hash or not. */
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV( rv );
+	}
+
+	if( !hv ) 
+	{
+		return NULL; 
+	}
+	
+	/* Grab some memmory for our ppd_choice_t pointer ... */
+	Newz( 69, retval, 1, cups_dest_t );
+
+	/* cups_dest_t.name */
+	ssv = hv_fetch( hv, "name", strlen( "name" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->name = SvPV_nolen( *ssv );
+	}
+	
+	/* cups_dest_t.instance */
+	ssv = hv_fetch( hv, "instance", strlen( "instance" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->instance = SvPV_nolen( *ssv );
+	}
+
+	/* cups_dest_t.is_default */
+	ssv = hv_fetch( hv, "is_default", strlen( "is_default" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->is_default = SvIV( *ssv );
+	}
+	
+	/* Place holder for cups_dest_t *options */
+	ssv = hv_fetch( hv, "options", strlen( "options" ), 0 );
+	
+	/* Check to see if we have a reference to an array or not. */
+	if( ( SvROK( *ssv ) && ( SvTYPE( SvRV( *ssv ) ) ) == SVt_PVAV ) )
+	{
+		av = (AV*)SvRV( *ssv );
+	}
+	
+	/* Stick this value into our structure so the crappy C code won't choke. */
+	retval->num_options = av_len( av ) + 1;
+	
+	/* Grab some memory for this ... */
+	Newz( 69, retval->options, retval->num_options, cups_option_t );
+	
+	for( loop = 0; loop < retval->num_options; loop++ )
+	{
+		/* Grab the array item out of the array */
+		ssv = av_fetch( av, loop, 0 );
+		/* Convert it to the C code */
+		retval->options[loop] = *XS_unpack_cups_option_tPtr( *ssv );
+	}
+
+	return retval;
+}
+
+/* Structure Description (cups_job_t)                             */
+/* -------------------------------------------------------------- */
+/* int id;                     Job ID                             */
+/* char *dest;                 Printer or Class name              */
+/* char *title;                Title/Job Name                     */
+/* char *user;                 Username of job submitter          */
+/* char *format;               Document format                    */
+/* ipp_jstate_t state;         Job state                          */
+/* int size;                   Size in KB                         */
+/* int priority;               Priority (1-100)                   */
+/* time_t completed_time;      Time the job was completed         */
+/* time_t creation_time;       Time the job was created           */
+/* time_t processing_time;     Time the job was processed         */
 void
 XS_pack_cups_job_tPtr( SV* s, cups_job_t* job )
 {
@@ -131,6 +267,201 @@ XS_pack_cups_job_tPtr( SV* s, cups_job_t* job )
 
 	return;
 }
+
+cups_job_t*
+XS_unpack_cups_job_tPtr( SV* rv )
+{
+	cups_job_t* retval = NULL;
+	HV* hv = NULL;
+	SV** ssv;
+
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV( rv );
+	}
+
+	if( !hv ) { return NULL; }
+
+	/*retval = (cups_job_t*)calloc( 1, sizeof( cups_job_t ) );*/
+	Newz( 69, retval, 1, cups_job_t );
+
+	/* cups_job_t.id */
+	ssv = hv_fetch( hv, "id", strlen( "id" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->id = SvIV( *ssv );
+	}
+
+	/* cups_job_t.dest */
+	ssv = hv_fetch( hv, "dest", strlen( "dest" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->dest = SvPV_nolen( *ssv );
+	}
+	
+	/* cups_job_t.title */
+	ssv = hv_fetch( hv, "title", strlen( "title" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->title = SvPV_nolen( *ssv );
+	}
+	
+	/* cups_job_t.user */
+	ssv = hv_fetch( hv, "user", strlen( "user" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->user = SvPV_nolen( *ssv );
+	}
+	
+	/* cups_job_t.format */
+	ssv = hv_fetch( hv, "format", strlen( "format" ), 0 );
+
+	if( ssv != NULL && SvPOK( *ssv ) )
+	{
+		retval->format = SvPV_nolen( *ssv );
+	}
+
+	/* cups_job_t.state */
+	ssv = hv_fetch( hv, "state", strlen( "state" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->state = SvIV( *ssv );
+	}
+
+	/* cups_job_t.size */
+	ssv = hv_fetch( hv, "size", strlen( "size" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->size = SvIV( *ssv );
+	}
+
+	/* cups_job_t.priority */
+	ssv = hv_fetch( hv, "priority", strlen( "priority" ), 0 );
+
+	if( ssv != NULL && SvIOK( *ssv ) )
+	{
+		retval->priority = SvIV( *ssv );
+	}
+
+	/* cups_job_t.completed_time */
+	ssv = hv_fetch( hv, "completed_time", strlen( "completed_time" ), 0 );
+
+	if( ssv != NULL && SvNOK( *ssv ) )
+	{
+		retval->completed_time = SvNV( *ssv );
+	}
+
+	/* cups_job_t.creation_time */
+	ssv = hv_fetch( hv, "creation_time", strlen( "creation_time" ), 0 );
+
+	if( ssv != NULL && SvNOK( *ssv ) )
+	{
+		retval->creation_time = SvNV( *ssv );
+	}
+
+	/* cups_job_t.processing_time */
+	ssv = hv_fetch( hv, "processing_time", strlen( "processing_time" ), 0 );
+
+	if( ssv != NULL && SvNOK( *ssv ) )
+	{
+		retval->processing_time = SvNV( *ssv );
+	}
+	
+	return retval;
+}
+
+/* Structure Description (ipp_t)                                  */
+/* -------------------------------------------------------------- */
+/* ipp_state_t state;          State of the Request               */
+/* ipp_request_t request;      Request Header                     */
+/* ipp_attribute_t* attrs      Attributes                         */
+/* ipp_attribute_t* last       Last attribute in the list         */
+/* ipp_attribute_t* current    Current attribute (Read/Write)     */
+/* ipp_tag_t curtag;           Current attribute group tag        */
+void
+XS_pack_ipp_tPtr( SV* s, ipp_t* ipp )
+{
+	SV* sv;
+	HV* hv = newHV();
+	HV* hv_request = newHV();
+	
+	/* Check to see the option is there before we jump off the
+	 * proverbial cliff */
+	if( ipp != NULL )
+	{
+		hv_store( hv, "state", strlen( "state" ),
+				  newSVuv( ipp->state ), 0 );  
+
+		/* XXX ipp_request_t* request */
+		
+
+		
+		/* XXX ipp_attribute_t* attrs */
+		/* XXX ipp_attribute_t* last */
+		/* XXX ipp_attribute_t* current */
+	}
+
+	sv = newSVrv( s, NULL );
+	SvREFCNT_dec( sv );
+	SvRV( s ) = (SV*)hv;
+
+	return;
+}
+
+ipp_t*
+XS_unpack_ipp_tPtr( SV* rv )
+{
+	ipp_t* retval = NULL;
+	HV* hv = NULL;
+	SV* option;
+	SV** ssv;
+	
+	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
+	{
+		hv = (HV*)SvRV(rv);
+	}
+
+	if( !hv ) { return NULL; }
+	
+	/* Grab some memmory */
+	Newz( 42, retval, 1,  ipp_t ); 
+	
+	/* ipp_t.name */
+	ssv = hv_fetch( hv, "state", strlen( "state" ), 0 );
+
+	if( ssv != NULL && SvUOK( *ssv ) )
+	{
+		retval->state = SvUV( *ssv );
+	}
+
+	return retval;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void
 XS_pack_ppd_attr_tPtr( SV* s, ppd_attr_t* attr )
@@ -677,150 +1008,6 @@ XS_pack_ppd_file_tPtr( SV* s, ppd_file_t* file )
 	return;
 }
 
-cups_job_t*
-XS_unpack_cups_job_tPtr( SV* rv )
-{
-	cups_job_t* retval = NULL;
-	HV* hv = NULL;
-	SV** ssv;
-
-	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
-	{
-		hv = (HV*)SvRV( rv );
-	}
-
-	if( !hv ) { return NULL; }
-
-	/*retval = (cups_job_t*)calloc( 1, sizeof( cups_job_t ) );*/
-	Newz( 69, retval, 1, cups_job_t );
-
-	/* cups_job_t.id */
-	ssv = hv_fetch( hv, "id", strlen( "id" ), 0 );
-
-	if( ssv != NULL && SvIOK( *ssv ) )
-	{
-		retval->id = SvIV( *ssv );
-	}
-
-	/* cups_job_t.dest */
-	ssv = hv_fetch( hv, "dest", strlen( "dest" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->dest = SvPV_nolen( *ssv );
-	}
-	
-	/* cups_job_t.title */
-	ssv = hv_fetch( hv, "title", strlen( "title" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->title = SvPV_nolen( *ssv );
-	}
-	
-	/* cups_job_t.user */
-	ssv = hv_fetch( hv, "user", strlen( "user" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->user = SvPV_nolen( *ssv );
-	}
-	
-	/* cups_job_t.format */
-	ssv = hv_fetch( hv, "format", strlen( "format" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->format = SvPV_nolen( *ssv );
-	}
-
-	/* cups_job_t.state */
-	ssv = hv_fetch( hv, "state", strlen( "state" ), 0 );
-
-	if( ssv != NULL && SvIOK( *ssv ) )
-	{
-		retval->state = SvIV( *ssv );
-	}
-
-	/* cups_job_t.size */
-	ssv = hv_fetch( hv, "size", strlen( "size" ), 0 );
-
-	if( ssv != NULL && SvIOK( *ssv ) )
-	{
-		retval->size = SvIV( *ssv );
-	}
-
-	/* cups_job_t.priority */
-	ssv = hv_fetch( hv, "priority", strlen( "priority" ), 0 );
-
-	if( ssv != NULL && SvIOK( *ssv ) )
-	{
-		retval->priority = SvIV( *ssv );
-	}
-
-	/* cups_job_t.completed_time */
-	ssv = hv_fetch( hv, "completed_time", strlen( "completed_time" ), 0 );
-
-	if( ssv != NULL && SvNOK( *ssv ) )
-	{
-		retval->completed_time = SvNV( *ssv );
-	}
-
-	/* cups_job_t.creation_time */
-	ssv = hv_fetch( hv, "creation_time", strlen( "creation_time" ), 0 );
-
-	if( ssv != NULL && SvNOK( *ssv ) )
-	{
-		retval->creation_time = SvNV( *ssv );
-	}
-
-	/* cups_job_t.processing_time */
-	ssv = hv_fetch( hv, "processing_time", strlen( "processing_time" ), 0 );
-
-	if( ssv != NULL && SvNOK( *ssv ) )
-	{
-		retval->processing_time = SvNV( *ssv );
-	}
-	
-	return retval;
-}
-
-cups_option_t*
-XS_unpack_cups_option_tPtr( SV* rv )
-{
-	cups_option_t* retval = NULL;
-	HV* hv = NULL;
-	SV* option;
-	SV** ssv;
-	
-	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
-	{
-		hv = (HV*)SvRV(rv);
-	}
-
-	if( !hv ) { return NULL; }
-	
-	/* Grab some memmory */
-	Newz( 42, retval, 1,  cups_option_t ); 
-	
-	/* cups_option_t.name */
-	ssv = hv_fetch( hv, "name", strlen( "name" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->name = SvPV_nolen( *ssv );
-	}
-	
-	/* cups_option_t.value */
-	ssv = hv_fetch( hv, "value", strlen( "value" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->value = SvPV_nolen( *ssv );
-	}
-
-	return retval;
-}
 
 void
 XS_pack_ppd_choice_tPtr( SV* s, ppd_choice_t* choice )
@@ -947,79 +1134,6 @@ XS_unpack_ppd_attr_tPtr( SV* rv )
 	return retval;
 }
 
-cups_dest_t*
-XS_unpack_cups_dest_tPtr( SV* rv )
-{
-	cups_dest_t* retval = NULL;
-	HV* hv = NULL;
-	AV* av = NULL;
-	SV** ssv = NULL;
-	int loop = 0;
-	
-	/* Check to see if we have a reference to a hash or not. */
-	if( ( SvROK( rv ) && ( SvTYPE( SvRV( rv ) ) ) == SVt_PVHV ) )
-	{
-		hv = (HV*)SvRV( rv );
-	}
-
-	if( !hv ) 
-	{
-		return NULL; 
-	}
-	
-	/* Grab some memmory for our ppd_choice_t pointer ... */
-	Newz( 69, retval, 1, cups_dest_t );
-
-	/* cups_dest_t.name */
-	ssv = hv_fetch( hv, "name", strlen( "name" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->name = SvPV_nolen( *ssv );
-	}
-	
-	/* cups_dest_t.instance */
-	ssv = hv_fetch( hv, "instance", strlen( "instance" ), 0 );
-
-	if( ssv != NULL && SvPOK( *ssv ) )
-	{
-		retval->instance = SvPV_nolen( *ssv );
-	}
-
-	/* cups_dest_t.is_default */
-	ssv = hv_fetch( hv, "is_default", strlen( "is_default" ), 0 );
-
-	if( ssv != NULL && SvIOK( *ssv ) )
-	{
-		retval->is_default = SvIV( *ssv );
-	}
-	
-	/* Place holder for cups_dest_t *options */
-	ssv = hv_fetch( hv, "options", strlen( "options" ), 0 );
-	
-	/* Check to see if we have a reference to an array or not. */
-	if( ( SvROK( *ssv ) && ( SvTYPE( SvRV( *ssv ) ) ) == SVt_PVAV ) )
-	{
-		av = (AV*)SvRV( *ssv );
-	}
-	
-	/* Stick this value into our structure so the crappy C code won't choke. */
-	retval->num_options = av_len( av ) + 1;
-	
-	/* Grab some memory for this ... */
-	Newz( 69, retval->options, retval->num_options, cups_option_t );
-	
-	for( loop = 0; loop < retval->num_options; loop++ )
-	{
-		/* Grab the array item out of the array */
-		ssv = av_fetch( av, loop, 0 );
-		/* Convert it to the C code */
-		retval->options[loop] = *XS_unpack_cups_option_tPtr( *ssv );
-	}
-
-	return retval;
-}
-	
 ppd_choice_t*
 XS_unpack_ppd_choice_tPtr( SV* rv )
 {

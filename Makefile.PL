@@ -26,12 +26,12 @@ else
 my( @version_parts ) = split( /\./, $version );
 
 if( ( $version_parts[1] < 1 ) || 
-	( ( $version_parts[1] == 1 ) && ( $version_parts[2] < 19 ) ) )
+	( ( $version_parts[1] == 1 ) && ( $version_parts[2] < 21 ) ) )
 {
 	print "The version of the Common Unix Printing System installed\n";
 	print "on your system is too old for this module to work properly.\n";
 	print "Please upgrade the version of CUPS on your system to version \n";
-	print "1.1.19 or higher and re-run Makefile.PL to install this module.\n\n";
+	print "1.1.21 or higher and re-run Makefile.PL to install this module.\n\n";
 	exit( 1 );
 }
 

@@ -22,7 +22,7 @@ use Carp;
 use strict;
 use warnings;
 
-our $VERSION = "0.25";
+our $VERSION = "0.35";
 
 our @ISA = qw( Exporter );
 
@@ -220,8 +220,7 @@ None.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003.
-D. Hageman (Dracken Technologies)
+Copyright (c) 2003-2004 D. Hageman (Dracken Technologies)
 All rights reserved.
 
 CUPS, the Common UNIX Printing System, the CUPS logo, and ESP Print Pro are the trademark property of Easy Software Products.

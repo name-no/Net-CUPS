@@ -199,7 +199,7 @@ my @names = (qw(CUPS_DATE_ANY CUPS_PRINTER_BIND CUPS_PRINTER_BW
 	       CUPS_PRINTER_PUNCH CUPS_PRINTER_REMOTE CUPS_PRINTER_SMALL
 	       CUPS_PRINTER_SORT CUPS_PRINTER_STAPLE CUPS_PRINTER_VARIABLE
 	       CUPS_VERSION CUPS_VERSION_MAJOR CUPS_VERSION_MINOR
-	       CUPS_VERSION_PATCH));
+	       CUPS_VERSION_PATCH CUPS_PRINTER_REJECTING));
 
 print constant_types(); # macro defs
 foreach (C_constant ("T", 'constant', 'IV', $types, undef, 3, @names) ) {
@@ -293,7 +293,12 @@ __END__
       }
       break;
     }
-    break;
+  case 22:
+    if (memEQ(name, "CUPS_PRINTER_REJECTING", 22)) {
+	  *iv_return = CUPS_PRINTER_REJECTING;
+	  return PERL_constant_ISIV;
+	}
+	break;
   }
   return PERL_constant_NOTFOUND;
 }

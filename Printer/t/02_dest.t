@@ -15,7 +15,7 @@ BEGIN { use_ok('Net::CUPS::Printer') };
 
 my @destinations = cupsGetDests();
 
-ok( @destinations, "cupsGetDests()" );
+ok( scalar( @destinations ) >= 0, "cupsGetDests()" );
 
 my $number_of_destinations_before = scalar( @destinations );
 
