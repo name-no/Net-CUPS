@@ -1,0 +1,8 @@
+Changes
+CUPS.pm
+CUPS.xs
+Makefile.PL
+MANIFEST
+ppport.h
+README
+t/01_use.t
