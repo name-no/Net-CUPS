@@ -1,14 +1,4 @@
 package Net::CUPS::Printer;
-######################################################################
-##                                                                  ##
-##  Package:  CUPS.pm                                               ##
-##  Author:   D. Hageman <dhageman@dracken.com>                     ##
-##                                                                  ##
-##  Description:                                                    ##
-##                                                                  ##
-##  Perl interface to the Common Unix Printing System (CUPS) API.   ##
-##                                                                  ##
-######################################################################
 
 ##==================================================================##
 ##  Libraries and Variables                                         ##
@@ -21,7 +11,7 @@ require XSLoader;
 use strict;
 use warnings;
 
-our $VERSION = "0.37";
+our $VERSION = "0.41";
 
 our @ISA = qw( Exporter );
 
@@ -64,6 +54,7 @@ our @EXPORT = qw(
 					cupsGetDest
 					cupsGetDests
 					cupsGetOption
+					cupsGetPassword
 					cupsGetPPD
 					cupsGetPrinters 
 					cupsGetJobs
@@ -72,6 +63,7 @@ our @EXPORT = qw(
 					cupsPrintFiles
 					cupsServer
 					cupsSetDests
+					cupsSetPassword
 					cupsUser
 );
 
@@ -139,7 +131,7 @@ Net::CUPS::Printer - CUPS C API Interface.
 =head1 ABSTRACT
 
  This is the abstract for this file.
- 
+
 =head1 FUNCTIONS
 
 =over 4
@@ -177,6 +169,11 @@ COMPLETED variable is set to true then only the completed jobs will be
 returned.  If it is set to false then all pending/processing jobs
 will be returned.
 
+=item cupsGetPassword
+
+Utility function for grabbing a password using the callback set by
+cupsSetPaswordCB.
+
 =item cupsLastError ()
 
 Function to grab the last error code the CUPS system encountered.
@@ -196,6 +193,10 @@ the perfered printing options.
 =item cupsServer ()
 
 Grabs the name of the current choosen CUPS server.
+
+=item cupsSetPasswordCB( CALLBACK )
+
+Function to set the callback for the cupsGetPassword function.
 
 =item cupsUser ()
 
@@ -217,8 +218,14 @@ None.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 D. Hageman (Dracken Technologies)
+Copyright (c) 2003-2005 D. Hageman 
+
+Copyright (c) 2006 Dracken Technology, Inc.
+
 All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself
 
 CUPS, the Common UNIX Printing System, the CUPS logo, and ESP Print Pro are the trademark property of Easy Software Products.
 

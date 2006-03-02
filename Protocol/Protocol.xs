@@ -7,14 +7,14 @@
 #include <cups/ipp.h>
 #include <cups/http.h>
 
-#include "Network_constant_c.inc"
+#include "Protocol_constant_c.inc"
 #include "../common/common.c"
 
-MODULE = Net::CUPS::Network		PACKAGE = Net::CUPS::Network
+MODULE = Net::CUPS::Protocol		PACKAGE = Net::CUPS::Protocol
 
 PROTOTYPES: DISABLE
 
-INCLUDE: Network_constant_xs.inc
+INCLUDE: Protocol_constant_xs.inc
 
 const char*
 ippErrorString( error )

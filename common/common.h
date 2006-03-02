@@ -3,7 +3,8 @@
  *
  *  Author: D. Hageman <dhageman@dracken.com>
  *
- *  Copyright 2003-2004 Dracken Technologies.
+ *  Copyright 2003-2005 D. Hageman
+ * 	Copyright 2006 Dracken Technology, Inc.
  *
  * CUPS, the Common UNIX Printing System, the CUPS logo, and ESP Print Pro 
  * are the trademark property of Easy Software Products.

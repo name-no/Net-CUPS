@@ -1,14 +1,4 @@
 package Net::CUPS;
-######################################################################
-##                                                                  ##
-##  Package:  CUPS.pm                                               ##
-##  Author:   D. Hageman <dhageman@dracken.com>                     ##
-##                                                                  ##
-##  Description:                                                    ##
-##                                                                  ##
-##  Perl interface to the Common Unix Printing System (CUPS) API.   ##
-##                                                                  ##
-######################################################################
 
 ##==================================================================##
 ##  Libraries and Variables                                         ##
@@ -20,12 +10,12 @@ require Exporter::Cluster;
 use strict;
 use warnings;
 
-our $VERSION = "0.37";
+our $VERSION = "0.41";
 
 our @ISA = qw( Exporter::Cluster );
 
 our %EXPORT_CLUSTER = (
-	'Net::CUPS::Network'	=>	[],
+	'Net::CUPS::Protocol'	=>	[],
 	'Net::CUPS::PPD'		=>	[],
 	'Net::CUPS::Printer'	=>	[],
 );
@@ -63,9 +53,9 @@ Net::CUPS is an interface to the Common Unix Printing System API.
 
 =head1 FUNCTIONS
 
-This module does not contain any functions.  All of the
-functions are contained within the modules listed
-in the SEE ALSO below.
+This module does not contain any functions.  All of the functions are 
+contained within the modules listed in the SEE ALSO section of this
+document.
 
 =head1 SUPPORT
 
@@ -84,13 +74,19 @@ D. Hageman E<lt>dhageman@dracken.comE<gt>
 
 =head1 SEE ALSO
 
-L<Net::CUPS::Printer>, L<Net::CUPS::PPD>, L<Net::CUPS::IPP>
+L<Net::CUPS::Printer>, L<Net::CUPS::PPD>, L<Net::CUPS::IPP>, 
+L<Net::CUPS::Protocol>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004.
-D. Hageman (Dracken Technologies)
+Copyright (c) 2003-2005 D. Hageman 
+
+Copyright (c) 2006 Dracken Technology, Inc.
+
 All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself
 
 CUPS, the Common UNIX Printing System, the CUPS logo, and ESP Print Pro are the trademark property of Easy Software Products.
 

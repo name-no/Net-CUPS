@@ -1,5 +1,15 @@
 Revision history for Perl extension Net::CUPS.
 
+0.41 Sun Feb 26 22:14:45 2006
+	- Added patch from Aike Reyer <aike@users.sourceforge.net> for dealing
+	  with passwords.
+	- Added SUPPORT and updated documentation.
+
+0.40 Mon Nov 29 20:46:44 2004
+	- It was pointed out to me that Network is probably not the best
+      name for the integrated IPP and HTTP modules.  Instead they are
+      now named Net::CUPS::Protocol.
+
 0.37 Mon Nov  8 23:49:36 2004
 	- Net::CUPS::IPP module has been moved to Net::CUPS::Network as the
 	  initial plan to have seperate IPP and HTTP modules proved to be

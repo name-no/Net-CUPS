@@ -36,7 +36,8 @@ the module had to be coded to handle various variables and functions.
 
 COPYRIGHT AND LICENSE
 
-Copyright (C) 2003-2004 D. Hageman <dhageman@dracken.com>
+Copyright (C) 2003-2005 D. Hageman <dhageman@dracken.com>
+Copyright (C) 2006 Dracken Technology, Inc.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

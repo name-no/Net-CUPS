@@ -16,7 +16,7 @@ if( !defined( $version ) )
 	print "Net::CUPS requires the Common Unix Printing System. Check\n";
 	print "your system configuration and then attempt the configure\n";
 	print "process again.\n";
-	die;
+	exit( 1 );
 }
 else
 {

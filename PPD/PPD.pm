@@ -1,14 +1,4 @@
 package Net::CUPS::PPD;
-######################################################################
-##                                                                  ##
-##  Package:  CUPS.pm                                               ##
-##  Author:   D. Hageman <dhageman@dracken.com>                     ##
-##                                                                  ##
-##  Description:                                                    ##
-##                                                                  ##
-##  Perl interface to the Common Unix Printing System (CUPS) API.   ##
-##                                                                  ##
-######################################################################
 
 ##==================================================================##
 ##  Libraries and Variables                                         ##
@@ -22,7 +12,7 @@ use Carp;
 use strict;
 use warnings;
 
-our $VERSION = "0.37";
+our $VERSION = "0.41";
 
 our @ISA = qw( Exporter );
 
@@ -142,7 +132,7 @@ Net::CUPS::PPD - CUPS C API Interface.
 =head1 ABSTRACT
 
  This is the abstract for this file.
- 
+
 =head1 FUNCTIONS
 
 =over 4
@@ -220,8 +210,14 @@ None.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 D. Hageman (Dracken Technologies)
+Copyright (c) 2003-2005 D. Hageman 
+
+Copyright (c) 2006 Dracken Technology, Inc.
+
 All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself
 
 CUPS, the Common UNIX Printing System, the CUPS logo, and ESP Print Pro are the trademark property of Easy Software Products.
 

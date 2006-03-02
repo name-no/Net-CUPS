@@ -1,15 +1,4 @@
 #!/usr/bin/perl
-######################################################################
-##                                                                  ##
-##  Script: net-cups-lpr                                            ##
-##  Author: D. Hageman <dhageman@dracken.com>                       ##
-##                                                                  ##
-##  Description:                                                    ##
-##                                                                  ##
-##  Command line utility to demonstrate the usage of Net::CUPS.     ##
-##  This is not intended to be a lpr(1) replacement!                ##
-##                                                                  ##
-######################################################################
 
 ##==================================================================##
 ##  Libraries and Variables                                         ##
@@ -25,7 +14,7 @@ use Net::CUPS;
 use Pod::Usage;
 use Getopt::Long qw( :config pass_through require_order );
 
-our $VERSION = "0.37";
+our $VERSION = "0.41";
 
 ##==================================================================##
 ##  Main Execution                                                  ##
@@ -164,7 +153,10 @@ L<Net::CUPS>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 D. Hageman (Dracken Technologies).  
+Copyright (c) 2003-2005 D. Hageman
+
+Copyright (c) 2006 Dracken Technology, Inc.
+
 All rights reserved.
 
 =cut

@@ -10,6 +10,38 @@
 #include "Printer_constant_c.inc"
 #include "../common/common.c"
 
+
+
+static SV *password_cb = (SV*) NULL;
+
+const char *
+password_cb_wrapper(const char *prompt)
+{
+	STRLEN n_a;
+	static char password[255] = { '\0' };
+
+	if (! password_cb) {
+		return NULL;
+	}
+
+	dSP;
+	ENTER;
+	SAVETMPS;
+	PUSHMARK(SP);
+	XPUSHs(sv_2mortal(newSVpv(prompt, 0)));
+	PUTBACK;
+	call_sv(password_cb, G_SCALAR);
+	SPAGAIN;
+	strncpy(password, POPpx, 254);
+
+	PUTBACK;
+	FREETMPS;
+	LEAVE;
+
+	return password;
+}
+
+
 MODULE = Net::CUPS::Printer		PACKAGE = Net::CUPS::Printer		
 
 PROTOTYPES: DISABLE
@@ -455,6 +487,27 @@ cupsSetUser( user )
 		const char* user;
 	CODE:
 		cupsSetUser( user );
+
+
+
+void
+cupsSetPasswordCB( cb )
+		SV *cb
+	CODE:
+		if( password_cb == (SV*) NULL ) {
+			password_cb = newSVsv( cb );
+			cupsSetPasswordCB( password_cb_wrapper );
+		} else {
+			SvSetSV( password_cb, cb );
+		}
+
+const char*
+cupsGetPassword( prompt )
+		const char *prompt;
+	CODE:
+		RETVAL = cupsGetPassword( prompt );
+	OUTPUT:
+		RETVAL
 
 const char*
 cupsUser()
