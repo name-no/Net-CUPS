@@ -1,29 +1,10 @@
 TYPEMAP
-
-cups_job_t *			T_PACKED
-cups_dest_t *			T_PACKED
-cups_dest_t **			T_PACKED
-ppd_file_t *			T_PACKED
-ipp_jstate_t			T_IV
-ipp_status_t			T_IV
-ppd_choice_t *			T_PACKED
-ppd_option_t *			T_PACKED
-ppd_group_t *			T_PACKED
-ppd_const_t *			T_PACKED
-ppd_size_t *			T_PACKED
-ppd_emul_t *			T_PACKED
-ppd_profile_t *			T_PACKED
-ppd_file_t *			T_PACKED
-ppd_ui_t				T_IV
-ppd_cs_t				T_IV
-ppd_section_t			T_IV
-ipp_uchar_t *			T_U_CHAR
-ipp_op_t				T_UV
-ipp_status_t			T_UV
-ipp_tag_t				T_IV
-ipp_t *					T_PACKED
-INPUT
-
-
-OUTPUT
-
+Net::CUPS::Destination	cups_dest_t*
+cups_dest_t *	T_PTRREF
+ppd_file_t *	T_PTRREF
+http_t *		T_PTRREF
+ipp_t *			T_PTRREF
+ipp_op_t		T_IV
+size_t *		T_IV
+ipp_tag_e		T_IV
+ipp_tag_t		T_IV

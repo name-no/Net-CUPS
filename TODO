@@ -1,10 +1,7 @@
 Net::CUPS TODO List
 ===================
 
-*) Re-write the cups_option_t conversion functions.
-*) Optimize the constant function in Net::CUPS::PPD.
-*) Optimize the constant function in Net::CUPS::Printer.
-*) Finish the raw IPP functionality of the CUPS API to the module.
-*) Add the raw HTTP functionality of the CUPS API to the module.
+*) Finish adding methods to the Net::CUPS::IPP.
+*) Finish adding methods to the Net::CUPS::PPD.
 *) Add more debugging and functionality to current example scripts.
 *) Add more example scripts.

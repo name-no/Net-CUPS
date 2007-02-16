@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::CUPS.
 
+0.50 Fri Feb 15 18:38:28 2007
+	- Reworked the entire module into the new design. 
+
 0.41 Sun Feb 26 22:14:45 2006
 	- Added patch from Aike Reyer <aike@users.sourceforge.net> for dealing
 	  with passwords.

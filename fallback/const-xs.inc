@@ -7,23 +7,27 @@ constant(sv)
 	dTARGET;
 #endif
 	STRLEN		len;
-	int			type;
-	IV			iv;
-	NV			nv;
+        int		type;
+	IV		iv;
+	/* NV		nv;	Uncomment this if you need to return NVs */
 	/* const char	*pv;	Uncomment this if you need to return PVs */
     INPUT:
-	SV *			sv;
-   	const char *	s = SvPV(sv, len);
+	SV *		sv;
+        const char *	s = SvPV(sv, len);
     PPCODE:
-		type = constant( aTHX_ s, len, &iv, &nv );
+        /* Change this to constant(aTHX_ s, len, &iv, &nv);
+           if you need to return both NVs and IVs */
+	type = constant(aTHX_ s, len, &iv);
+      /* Return 1 or 2 items. First is error message, or undef if no error.
+           Second, if present, is found value */
         switch (type) {
         case PERL_constant_NOTFOUND:
-          sv = 
-		  	sv_2mortal(newSVpvf("%s is not a valid Net::CUPS::PPD macro", s));
+          sv = sv_2mortal(newSVpvf("%s is not a valid Net::CUPS macro", s));
           PUSHs(sv);
           break;
         case PERL_constant_NOTDEF:
-          sv = sv_2mortal(newSVpvf("Your vendor has not defined Net::CUPS::PPD macro %s, used", s));
+          sv = sv_2mortal(newSVpvf(
+	    "Your vendor has not defined Net::CUPS macro %s, used", s));
           PUSHs(sv);
           break;
         case PERL_constant_ISIV:
@@ -37,11 +41,12 @@ constant(sv)
           PUSHs(&PL_sv_undef);
           PUSHs(&PL_sv_no);
           break; */
+	/* Uncomment this if you need to return NVs
         case PERL_constant_ISNV:
           EXTEND(SP, 1);
           PUSHs(&PL_sv_undef);
           PUSHn(nv);
-          break;
+          break; */
 	/* Uncomment this if you need to return PVs
         case PERL_constant_ISPV:
           EXTEND(SP, 1);
@@ -77,7 +82,7 @@ constant(sv)
           break; */
         default:
           sv = sv_2mortal(newSVpvf(
-	    "Unexpected return type %d while processing Net::CUPS::PPD macro %s, used",
+	    "Unexpected return type %d while processing Net::CUPS macro %s, used",
                type, s));
           PUSHs(sv);
         }

@@ -1,11 +1,14 @@
 Net::CUPS README
 ================
 
-Net::CUPS is an interface to the Common Unix Printing System API.  
-It follows most of the conventions set forth in the C API so anyone
-who is familiar with it can easily get acquainted with Net::CUPS. 
-The main deviation is the practice of converting the C structs
-into Perl hashes for easy modification from a Perl application.
+Net::CUPS is an interface to the Common Unix Printing System API.
+
+Previous versions of this module attempted to provide a Perl interface
+layer similar to the C interface of CUPS.  This was fine for power users,
+but most people were not looking for this type of interface.
+
+This module has now been converted to use an object oriented paradigm
+to facilitate quicker development and ease of use.
 
 The Common Unix Printing System can be found at http://www.cups.org.
 
@@ -18,16 +21,10 @@ To install this module type the following:
    make test
    make install
 
-Please note that if you want to install only one of the modules that
-you will have to copy the file 'typemap' to the individual directories
-containing the modules you want to install or it will not compile 
-correctly.  This practice is not recommended.
-
 DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-   *) Exporter::Cluster
    *) Common Unix Printing System (CUPS) - http://www.cups.org
 
 The Makefile.PL will test for the version of the CUPS you have installed
@@ -37,7 +34,7 @@ the module had to be coded to handle various variables and functions.
 COPYRIGHT AND LICENSE
 
 Copyright (C) 2003-2005 D. Hageman <dhageman@dracken.com>
-Copyright (C) 2006 Dracken Technology, Inc.
+Copyright (C) 2006-2007 Dracken Technology, Inc. (http://www.dracken.com/)
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
