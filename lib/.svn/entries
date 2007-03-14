@@ -1,0 +1,31 @@
+8
+
+dir
+1
+http://svn.dracken.com/net-cups/lib
+http://svn.dracken.com/net-cups
+
+
+
+2007-02-21T19:58:49.239191Z
+1
+dhageman
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+787766c6-c02c-4ec1-802c-5685f8df63c2
+
+Net
+dir
+
