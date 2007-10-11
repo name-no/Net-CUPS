@@ -105,13 +105,19 @@ NETCUPS_getPassword( prompt )
 
 void
 NETCUPS_getDestination( name )
-		const char* name;
+		char* name;
 	PPCODE:
 		cups_dest_t * destinations = NULL;
 		cups_dest_t * destination = NULL;
 		int count = 0;
 		SV* rv = NULL;
 		count = cupsGetDests( &destinations );
+		/* If we have a NULL for destination name, then we are going 
+           to assume we want the default. */
+		if( !strlen( name ) )
+		{
+			name = cupsGetDefault();
+		}
 		destination = cupsGetDest( name, NULL, count, destinations );
 		rv = sv_newmortal();
 		sv_setref_pv( rv, "Net::CUPS::Destination", destination );
@@ -253,7 +259,7 @@ NETCUPS_getDestinationOptions( self )
 		}
 		XSRETURN( count );
 
-HV*
+SV*
 NETCUPS_getJob( dest, jobid )
 		const char* dest;
 		int jobid;
@@ -262,7 +268,8 @@ NETCUPS_getJob( dest, jobid )
 		int count = 0;
 		HV* hv = NULL;
 		cups_job_t* jobs = NULL;
-		RETVAL = NULL;
+		char *tstate = NULL;
+		RETVAL = &PL_sv_undef;
 		count = cupsGetJobs( &jobs, dest, 0, -1 );
 		for( loop = 0; loop < count; loop++ )
 		{
@@ -302,10 +309,13 @@ NETCUPS_getJob( dest, jobid )
 						  strlen( "processing_time" ),
 						  newSVnv( jobs[loop].processing_time ), 0 );
 
-
 				hv_store( hv, "size",
 						  strlen( "size" ),
 						  newSViv( jobs[loop].size ), 0 );
+
+				hv_store( hv, "state",
+						  strlen( "state" ),
+						  newSViv( jobs[loop].state ), 0 );
 
 				hv_store( hv, "title",
 						  strlen( "title" ),
@@ -317,7 +327,58 @@ NETCUPS_getJob( dest, jobid )
 						  newSVpv( jobs[loop].user, 
 								   strlen( jobs[loop].user ) ), 0 );
 
-				RETVAL = hv;
+				switch( jobs[loop].state ) 
+				{
+					case IPP_JOB_PENDING:
+					{
+							tstate = "pending";
+							break;
+					}
+					case IPP_JOB_HELD:
+					{
+							tstate = "held";
+							break;
+					}
+					case IPP_JOB_PROCESSING:
+					{
+							tstate = "processing";
+							break;
+					}
+					case IPP_JOB_STOPPED:
+					{
+							tstate = "stopped";
+							break;
+					}
+					/* CANCELLED is not a TYPO! (Well, it is, but it
+ 					   is not my fault! */
+					case IPP_JOB_CANCELLED:
+					{
+							tstate = "canceled";
+							break;
+					}
+					case IPP_JOB_ABORTED: 
+					{
+							tstate = "aborted";
+							break;
+					}
+					case IPP_JOB_COMPLETED: 
+					{
+							tstate = "completed";
+							break;
+					}
+					default: 
+					{
+							tstate = "unknown";
+							break;
+					}
+				}
+
+				hv_store( hv, "state_text",
+						  strlen( "state_text" ),
+						  newSVpv( tstate, 
+								   strlen( tstate ) ), 0 );
+
+				RETVAL = newRV((SV*)hv);
 			}
 		}
 	OUTPUT:

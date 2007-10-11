@@ -1,4 +1,13 @@
 Revision history for Perl extension Net::CUPS.
+
+0.55 Tue Oct 09 20:46:58 2007
+	- Fixed a segfault in getJobs [Sven-Haegar Koch]
+	- The job hash from getJobs now returns the state!
+	- Added a human readable state to the job hash [Sven-Haegar Koch]
+	- Added basic examples of Net::CUPS operations.
+	- The method getDestination() will attempt to get the default
+	  destination on the server if a destination is not provided.
+
 0.51 Wed Mar 14 10:35:16 2007
 	- Attempt to rework the DESTROY method for Net::CUPS::Destination for
       a bug reported by Graham Jenkins <graham@vpac.org>
