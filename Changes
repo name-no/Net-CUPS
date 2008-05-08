@@ -1,5 +1,14 @@
 Revision history for Perl extension Net::CUPS.
 
+0.56 Wed Mar 26 19:35:05 2008
+	+ Most of the changes below were added by Mark Gannon <mark@truenorth.nu>
+	- Added methods to Net::CUPS::Destination to get Uri, Location and
+	  Description.
+	- Added methods to Net::CUPS to get PPDs.
+	- Added methods to Net::CUPS to create and delete destinations.
+	- Corrected the issue of creating bastardized objects as reported by
+	  Gunnar Wolf.
+
 0.55 Tue Oct 09 20:46:58 2007
 	- Fixed a segfault in getJobs [Sven-Haegar Koch]
 	- The job hash from getJobs now returns the state!

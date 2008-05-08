@@ -959,7 +959,7 @@ our @EXPORT = qw(
 	PPD_VERSION
 );
 
-our $VERSION = '0.55';
+our $VERSION = '0.56';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -986,6 +986,10 @@ sub AUTOLOAD {
 
 require XSLoader;
 XSLoader::load('Net::CUPS', $VERSION);
+
+use Net::CUPS::PPD;
+use Net::CUPS::IPP;
+use Net::CUPS::Destination;
 
 ##==================================================================##
 ##  Constructors                                                    ##
@@ -1131,6 +1135,60 @@ sub setUsername
 	return;
 }
 
+##----------------------------------------------##
+##  getPPDMakes                                 ##
+##----------------------------------------------##
+sub getPPDMakes 
+{
+	my $self = shift;
+
+	return( NETCUPS_getPPDMakes() );
+}
+
+
+##----------------------------------------------##
+##  getAllPPs                                   ## 
+##----------------------------------------------##
+sub getAllPPDs 
+{
+	my $self = shift;
+
+	return( NETCUPS_getAllPPDs() );
+}
+
+##----------------------------------------------##
+##  deleteDestination                           ##
+##----------------------------------------------##
+sub deleteDestination 
+{
+	my( $self, $destination )  = @_;
+	NETCUPS_deleteDestination( $destination );	
+	return; 
+}
+
+##----------------------------------------------##
+##  getPPDFileName                              ##
+##----------------------------------------------##
+sub getPPDFileName 
+{
+	my( $self, $ppdname)  = @_;
+	return( NETCUPS_getPPDFileName( $ppdname ) );	
+}
+
+##----------------------------------------------##
+##  addDestination                              ##
+##----------------------------------------------##
+sub addDestination 
+{
+	my( $self, $name, $location, $printer_info, $ppd_name, $device_uri)  = @_;
+
+	return( NETCUPS_addDestination( $name, 
+									$location, 
+									$printer_info, 
+									$ppd_name, 
+									$device_uri ) );	
+}
+
 ##==================================================================##
 ##  End of Code                                                     ##
 ##==================================================================##
@@ -1178,17 +1236,39 @@ on the cups server.
 
 =item B<getPassword>
 
-my $password = $cups->getPassword( $prompt )
+my $password = $cups->getPassword( $prompt ); 
 
 Method to retrieve the password from the user via the password
 callback.
 
 =item B<getPPD>
 
-my $ppd = $cups->getPPD( $name )
+my $ppd = $cups->getPPD( $name ); 
 
 Returns a Net::CUPS::PPD object for the default printer or for the
 specified printer or class.
+
+=item B<getPPDMakes>
+
+my $makes = $cups->getPPDMakes(); 
+
+Returns an arrary of scalers holding the names of all the makers (e.g. HP or Lexmark) 
+of PPD files installed on the CUPS server
+
+=item B<getAllPPDs> 
+
+my $ppds = $cups->getAllPPDs(); 
+
+Returns an array of scalers with the maker and model of all the PPDs
+installed on the CUPS server 
+
+=item B<getPPDFileName>
+
+$cups->getPPDFileName($ppd_name_and_make); 
+
+Returns the file name of the PPD specified by the name and make as found in the array
+returned by getAllPPDs.  The file name is used by addDestination and is relative 
+to where the CUPS server is instructed to look (e.g /usr/share/ppd).
 
 =item B<getServer>
 
@@ -1230,6 +1310,20 @@ $cups->setUsername( $username );
 
 A method to change the username associated with CUPS interaction.
 
+=item B<deleteDestination>
+
+$cups->deleteDestination( $destination_name );
+
+A method to delete an existing destination  
+
+=item B<addDestination>
+
+$cups->addDestination( $name, $location, $printer_info, $ppd_name, $device_uri)  
+A method to create a new destination.  The $ppd_name variable should be 
+the one returned for that printer by the getPPDFileName method.  It will 
+be relative to where the CUPS server is configured to look for PPD 
+files (e.g. /usr/share/ppd). 
+
 =back
 
 =head1 SEE ALSO
@@ -1248,6 +1342,9 @@ Dracken Technology, Inc. (http://www.dracken.com/)
 =head1 ACKNOWLEDGEMENTS
 
 Aike Reyer <aike@users.sourceforge.net> supplied the password handling code.
+
+Mark Gannon <mark@truenorth.nu> supplied the code for PPD acquisition,
+destination creation and destination deletion.
 
 =head1 COPYRIGHT AND LICENSE
 

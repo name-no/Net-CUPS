@@ -175,11 +175,262 @@ NETCUPS_requestData( request, resource, filename )
 		httpClose( http );
 		XSRETURN( 1 );
 
+void
+NETCUPS_getPPDMakes() 
+	http_t          *http;     /* HTTP object */
+	ipp_t           *request;  /* IPP request object */
+	ipp_t           *response; /* IPP response object */
+	ipp_attribute_t *attr;     /* Current IPP attribute */
+		
+	PPCODE:
+		SV* rv = NULL;	
+		int count = 0;	
+		cups_lang_t *language;
+		language = cupsLangDefault();
+		http = httpConnectEncrypt(cupsServer(), ippPort(), cupsEncryption()); 
+		request =  ippNewRequest(CUPS_GET_PPDS);
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_CHARSET,
+					 "attributes-charset", NULL, "utf-8");
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE,
+					 "attributes-natural-language", NULL, language->language);
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_KEYWORD,
+					 "requested-attributes", NULL, "ppd-make");
+
+		response = cupsDoRequest(http, request, "/");
+
+		if (response != NULL) {
+			attr = ippFindAttribute(response, "ppd-make", IPP_TAG_TEXT); 
+			rv = sv_newmortal();
+			sv_setpv(rv, attr->values[0].string.text);
+			XPUSHs(rv);
+			count++;
+
+			while (attr != NULL) {
+				attr = ippFindNextAttribute(response, "ppd-make", IPP_TAG_TEXT);
+				if (attr == NULL) {
+					break;
+				}
+
+				rv = sv_newmortal();
+				sv_setpv(rv, attr->values[0].string.text);
+				XPUSHs(rv);
+				count++;
+			}			
+	
+		ippDelete(response);
+		httpClose(http); 
+	}
+	else {
+		XSRETURN ( 0 );
+	}
+	XSRETURN( count );
+
+
+void
+NETCUPS_getAllPPDs ()
+	http_t          *http;     /* HTTP object */
+	ipp_t           *request;  /* IPP request object */
+	ipp_t           *response; /* IPP response object */
+	ipp_attribute_t *attr;     /* Current IPP attribute */
+
+	PPCODE:
+		SV* rv = NULL;	
+		int count = 0;	
+		cups_lang_t *language;
+		language = cupsLangDefault();
+		http = httpConnectEncrypt(cupsServer(), ippPort(), cupsEncryption()); 
+		request =  ippNewRequest(CUPS_GET_PPDS);
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_CHARSET,
+					 "attributes-charset", NULL, "utf-8");
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE,
+					 "attributes-natural-language", NULL, language->language);
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_KEYWORD,
+					 "requested-attributes", NULL, "ppd-make-and-model");
+		response = cupsDoRequest(http, request, "/");
+	
+		if (response != NULL) {
+			attr = ippFindAttribute(response, 
+									"ppd-make-and-model", 
+									IPP_TAG_TEXT); 
+			rv = sv_newmortal();
+			sv_setpv(rv, attr->values[0].string.text);
+			XPUSHs(rv);
+			count++;
+			while (attr != NULL) {
+				attr = ippFindNextAttribute(response, 
+											"ppd-make-and-model", 
+											IPP_TAG_TEXT);
+				if (attr == NULL) {
+					break;
+				}
+				rv = sv_newmortal();
+				sv_setpv(rv, attr->values[0].string.text);
+				XPUSHs(rv);
+				count++;
+			}			
+
+			ippDelete(response);
+			httpClose(http); 
+		}	
+		else {
+			XSRETURN ( 0 );
+		}
+	XSRETURN( count );
+
+void
+NETCUPS_deleteDestination( destination );
+	const char* destination;
+
+	PPCODE:
+		ipp_t *request;
+		http_t *http;
+		char uri[HTTP_MAX_URI]; 	
+	
+		httpAssembleURIf(HTTP_URI_CODING_ALL, uri, sizeof(uri), "ipp", NULL,
+						 cupsServer(), 0, "/printers/%s", destination);
+		http = httpConnectEncrypt(cupsServer(), ippPort(), cupsEncryption());
+		request = ippNewRequest(CUPS_DELETE_PRINTER);
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_URI, "printer-uri",
+					 NULL, uri);
+		ippDelete(cupsDoRequest(http, request, "/admin/"));
+
+void 
+NETCUPS_addDestination(name, location, printer_info, ppd_name, device_uri);
+	const char* name;
+	const char* location;
+	const char* printer_info;
+	const char* ppd_name;
+	const char* device_uri;
+
+	PPCODE:
+		http_t *http = NULL;     /* HTTP object */
+		ipp_t *request = NULL;  /* IPP request object */
+		char uri[HTTP_MAX_URI];	/* Job URI */
+		
+		http = httpConnectEncrypt(cupsServer(), ippPort(), cupsEncryption());
+		
+		request = ippNewRequest(CUPS_ADD_PRINTER);
+
+		httpAssembleURIf(HTTP_URI_CODING_ALL, uri, sizeof(uri), "ipp", NULL,
+						 cupsServer(), 0, "/printers/%s", name);
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_URI, "printer-uri",
+					 NULL, uri);
+		ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT, "printer-location",
+					 NULL, location);
+		ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT, "printer-info",
+					 NULL, printer_info );
+		ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME, "ppd-name",
+					 NULL, ppd_name);
+		strncpy(uri, device_uri, sizeof(uri)); 
+		ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_URI, "device-uri",
+					 NULL, uri);
+		ippAddBoolean(request, IPP_TAG_PRINTER, "printer-is-accepting-jobs", 1);
+		ippAddInteger(request, IPP_TAG_PRINTER, IPP_TAG_ENUM, "printer-state",
+					  IPP_PRINTER_IDLE);
+		ippDelete(cupsDoRequest(http, request, "/admin/"));
+
+void
+NETCUPS_getPPDFileName(ppdfilename);
+	const char* ppdfilename;
+
+	PPCODE:
+		http_t          *http;     /* HTTP object */
+		ipp_t           *request;  /* IPP request object */
+		ipp_t           *response; /* IPP response object */
+		ipp_attribute_t *attr;     /* Current IPP attribute */
+		int i = 0;
+		char* tmpppd;
+		char test[1024];	
+		SV* rv = NULL;
+
+		http = httpConnectEncrypt(cupsServer(), ippPort(), cupsEncryption()); 
+	
+		request = ippNewRequest(CUPS_GET_PPDS);	
+
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_CHARSET,
+					 "attributes-charset", NULL, "utf-8");
+		ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE,
+					 "attributes-natural-language", NULL, "en");	
+
+		response = cupsDoRequest(http, request, "/");
+
+		if (response != NULL) {
+			attr = ippFindAttribute(response, "ppd-name", IPP_TAG_NAME );
+			while ((attr != NULL) && (i < 1)) {
+				tmpppd = attr->values[0].string.text;	
+				attr = ippFindNextAttribute(response, 
+											"ppd-make", 
+											IPP_TAG_TEXT);
+				attr = ippFindNextAttribute(response, 
+											"ppd-make-and-model", 
+											IPP_TAG_TEXT);
+				if (strcmp(attr->values[0].string.text, ppdfilename) == 0 ) {
+					/* return tmpppd; */
+					strcpy(test, tmpppd);	
+					break;	
+				}
+				attr = ippFindNextAttribute(response, "ppd-name", IPP_TAG_NAME);	
+			}
+		}
+		ippDelete(response); 
+		httpClose(http);
+		rv = sv_newmortal();  
+		sv_setpv( rv, test); 
+		XPUSHs( rv );
+
 MODULE = Net::CUPS      PACKAGE = Net::CUPS::Destination
 
 PROTOTYPES: DISABLE
 
 INCLUDE: const-xs.inc
+
+void
+NETCUPS_getDeviceAttribute( device, attribute, attribute_type )
+	const char* device;
+	const char* attribute;
+	int attribute_type;
+
+	PPCODE: 
+		http_t *http = NULL;			/* HTTP object */
+		ipp_t *request = NULL; 		/* IPP request */
+		ipp_t *response = NULL;			/* IPP response */
+		ipp_attribute_t *attr = NULL;	/* IPP attribute */
+		SV* rv = NULL; 
+		char *description = NULL;
+
+		http = httpConnectEncrypt( cupsServer(), ippPort(), cupsEncryption() );
+
+		if (http == NULL) {
+			perror ("Unable to connect to server");
+			/* return (1); */
+		}
+
+		request = ippNewRequest (CUPS_GET_PRINTERS);
+ 
+		if ((response = cupsDoRequest (http, request, "/")) != NULL) {
+			attr = ippFindNextAttribute(response, "printer-name", IPP_TAG_NAME);
+
+			while (attr != NULL) {
+				if (strcmp(attr->values[0].string.text, device) == 0) { 
+					attr = ippFindNextAttribute( response, 
+												 attribute, 
+												 attribute_type);
+					rv = sv_newmortal();  
+					sv_setpv( rv, attr->values[0].string.text); 
+					XPUSHs( rv );
+					break;	
+				}					
+				attr = ippFindNextAttribute( response, 
+											 "printer-name", 
+											 IPP_TAG_NAME);
+				if (attr == NULL) {
+					break;
+				}   
+			}
+		}
+		ippDelete( response ); 
+		httpClose( http );   	 
+		XSRETURN( 1 );
 
 int
 NETCUPS_addOption( self, name, value )
@@ -698,7 +949,6 @@ NETCUPS_newIPPRequest( op )
 		sv_setref_pv( rv, "Net::CUPS::IPP", ipp );
 		XPUSHs( rv );
 		XSRETURN( 1 );
-
 
 int
 NETCUPS_setPort( port )

@@ -961,7 +961,7 @@ our @EXPORT = qw(
 	PPD_VERSION
 );
 
-our $VERSION = '0.55';
+our $VERSION = '0.56';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -1048,6 +1048,19 @@ sub cancelJob
 }
 
 ##----------------------------------------------##
+##  getDescription                              ##
+##----------------------------------------------##
+sub getDescription
+{
+	my $self = shift;
+
+	return( NETCUPS_getDeviceAttribute( $self->getName(), 
+										"printer-info",
+										IPP_TAG_TEXT ) );
+}
+
+
+##----------------------------------------------##
 ##  getError                                    ##
 ##----------------------------------------------##
 sub getError
@@ -1082,6 +1095,18 @@ sub getJobs
 }
 
 ##----------------------------------------------##
+##  getLocation                                 ##
+##----------------------------------------------##
+sub getLocation
+{
+	my $self = shift;
+
+	return( NETCUPS_getDeviceAttribute( $self->getName(), 
+										"printer-location",
+										IPP_TAG_TEXT ) );
+}
+
+##----------------------------------------------##
 ##  getName                                     ##
 ##----------------------------------------------##
 sub getName
@@ -1109,6 +1134,18 @@ sub getOptions
 	my $self = shift;
 
 	return( NETCUPS_getDestinationOptions( $self ) );
+}
+
+##----------------------------------------------##
+##  getUri                                      ##
+##----------------------------------------------##
+sub getUri
+{
+	my $self = shift;
+
+	return( NETCUPS_getDeviceAttribute( $self->getName(), 
+										"device-uri",
+										IPP_TAG_URI ) );
 }
 
 ##----------------------------------------------##
@@ -1174,6 +1211,12 @@ my $dest->cancelJob( $jobid );
 
 Method to chancel a job sent to this destination.
 
+=item B<getDescription>
+
+my $description = $dest->getDescription();
+
+Provides the description string associated with this printer.
+
 =item B<getError>
 
 my $error = $dest->getError();
@@ -1200,6 +1243,10 @@ This method will return an array of job identifiers.  $whose is 0 for
 all users and 1 is just for the selected user.  $scope is -1 for all 
 jobs, 0 for active jobs and 1 for completed jobs.
 
+=item B<getLocation>
+
+Returns the location string for this destination.
+
 =item B<getOptionValue>
 
 my $value = $dest->getOptionValue( $name );
@@ -1220,6 +1267,13 @@ my $jobid = $dest->printFile( $filename, $title );
 I know this is the method that you have been looking for.  This is
 what you will use to send a file to handled by the destination.  You
 must provide the name of the file and a title for the job.
+
+=item B<getUri>
+
+my $uri = $dest->getUri();
+
+This function returns the device URI of a destination.
+For example, a network printer might appear as socket://192.168.1.1
 
 =back
 

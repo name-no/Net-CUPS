@@ -41,6 +41,9 @@ SPECIAL THANKS
 Sven-Haegar Koch <haegar@sdinet.de> has graciously provided patches
 to fix issues and make improvements to Net::CUPS.
 
+Mark Gannon <mark@truenorth.nu> has provided patches to add quite a bit of
+additional functionality to Net::CUPS.
+
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
 

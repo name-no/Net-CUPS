@@ -8,3 +8,4 @@ ipp_op_t		T_IV
 size_t *		T_IV
 ipp_tag_e		T_IV
 ipp_tag_t		T_IV
+const char *	T_PV
