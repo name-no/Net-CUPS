@@ -12,7 +12,6 @@
 #include <cups/ppd.h>
 #include <cups/file.h>
 #include <cups/dir.h>
-#include <cups/i18n.h>
 #include <cups/language.h>
 #include <cups/transcode.h>
 #include <cups/adminutil.h>

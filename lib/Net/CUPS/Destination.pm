@@ -961,7 +961,7 @@ our @EXPORT = qw(
 	PPD_VERSION
 );
 
-our $VERSION = '0.56';
+our $VERSION = '0.57';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -1056,7 +1056,7 @@ sub getDescription
 
 	return( NETCUPS_getDeviceAttribute( $self->getName(), 
 										"printer-info",
-										IPP_TAG_TEXT ) );
+										IPP_TAG_TEXT() ) );
 }
 
 
@@ -1103,7 +1103,7 @@ sub getLocation
 
 	return( NETCUPS_getDeviceAttribute( $self->getName(), 
 										"printer-location",
-										IPP_TAG_TEXT ) );
+										IPP_TAG_TEXT() ) );
 }
 
 ##----------------------------------------------##
@@ -1145,7 +1145,7 @@ sub getUri
 
 	return( NETCUPS_getDeviceAttribute( $self->getName(), 
 										"device-uri",
-										IPP_TAG_URI ) );
+										IPP_TAG_URI() ) );
 }
 
 ##----------------------------------------------##
