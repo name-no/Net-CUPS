@@ -20,7 +20,9 @@ if( !defined( $version ) )
 	print "Net::CUPS requires the Common Unix Printing System. Check\n";
 	print "your system configuration and then attempt the configure\n";
 	print "process again.\n";
-	exit( 1 );
+	## I would like to exit( 0 ), but apparently this gives me bad
+	## reports from CPAN Testers.  *sigh*
+	exit( 0 );
 }
 else
 {
@@ -36,7 +38,9 @@ if( ( $version_parts[1] < 2 ) ||
 	print "on your system is too old for this module to work properly.\n";
 	print "Please upgrade the version of CUPS on your system to version \n";
 	print "1.2.2 or higher and re-run Makefile.PL to install this module.\n\n";
-	exit( 1 );
+	## I would like to exit( 0 ), but apparently this gives me bad
+	## reports from CPAN Testers.  *sigh*
+	exit( 0 );
 }
 
 ## Grab the CFLAGS ...

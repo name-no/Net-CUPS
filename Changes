@@ -1,5 +1,13 @@
 Revision history for Perl extension Net::CUPS.
 
+
+0.58 Thu Aug 21 10:04:32 2008
+	- No changes to the core in this release.  This release is designed
+	  to address issues with automated testing.  I have removed the
+	  tests for manipulating destinations since they required to have
+      accounts on the CUPS system.  I have also modified the Makefile.PL
+	  to deal with issues in the Perl Testers systems.
+
 0.57 Sun Aug 10 19:19:33 2008
 	+ Special thanks to Mike Eldridge <diz@cpan.org> for submitting a 
       patch to correct issues with constants on certain platforms.
