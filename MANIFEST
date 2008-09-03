@@ -2,6 +2,7 @@ Changes
 CUPS.xs
 examples/list_dests.pl
 examples/print_file.pl
+extra_t/03_destination.t
 fallback/const-c.inc
 fallback/const-xs.inc
 lib/Net/CUPS/Destination.pm

@@ -1,5 +1,7 @@
 Revision history for Perl extension Net::CUPS.
 
+0.59 Wed Sep  3 13:56:12 2008
+	- I really removed the test this time.
 
 0.58 Thu Aug 21 10:04:32 2008
 	- No changes to the core in this release.  This release is designed
