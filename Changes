@@ -1,5 +1,10 @@
 Revision history for Perl extension Net::CUPS.
 
+0.60 Thu Jul 30 08:28:18 2009
+	- Graham Jenkins <graham@vpac.org> reported additional issues
+	  with the cleanup in the DESTROY method.  Tweaked it to avoid
+	  double free issues.
+
 0.59 Wed Sep  3 13:56:12 2008
 	- I really removed the test this time.
 

@@ -461,7 +461,6 @@ NETCUPS_freeDestination( self )
 		/* If we use the following function, then we will get errors */
 		/* about double frees.                                       */
 		/*cupsFreeDests( 1, self );                                  */
-		free( self->name );
 		if( self->instance )
 			free( self->instance );
 		cupsFreeOptions( self->num_options, self->options );

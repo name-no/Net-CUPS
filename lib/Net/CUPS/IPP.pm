@@ -961,7 +961,7 @@ our @EXPORT = qw(
 	PPD_VERSION
 );
 
-our $VERSION = '0.59';
+our $VERSION = '0.60';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -1172,7 +1172,7 @@ Dracken Technology, Inc. (http://www.dracken.com/)
 
 Copyright (c) 2003-2005 David Hageman 
 
-Copyright (c) 2006-2007 Dracken Technology, Inc.
+Copyright (c) 2006-2009 Dracken Technology, Inc.
 
 All rights reserved.
 
