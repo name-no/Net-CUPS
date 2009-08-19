@@ -959,7 +959,7 @@ our @EXPORT = qw(
 	PPD_VERSION
 );
 
-our $VERSION = '0.60';
+our $VERSION = '0.61';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
