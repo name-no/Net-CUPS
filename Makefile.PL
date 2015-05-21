@@ -29,7 +29,7 @@ else
 	print "$version\n";
 }
 
-unless( $version >= 1.3 )
+unless( $version >= 1.2 )
 {
 	print "The version of the Common Unix Printing System installed\n";
 	print "on your system is too old for this module to work properly.\n";
