@@ -8,7 +8,7 @@ print "Net::CUPS Configuration\n";
 my %config;
 
 print "Running cups-config ... ";
-my $version = `cups-config --version`;
+my $version = `cups-config --api-version`;
 
 $version =~ s/^\s+//g;
 $version =~ s/\s+$//g;
@@ -29,10 +29,7 @@ else
 	print "$version\n";
 }
 
-my @version_parts = split( /\./, $version );
-
-if( ( $version_parts[1] < 2 ) ||
-	( ( $version_parts[1] == 2 ) && ( $version_parts[2] < 2 ) ) )
+unless( $version >= 1.3 )
 {
 	print "The version of the Common Unix Printing System installed\n";
 	print "on your system is too old for this module to work properly.\n";
